@@ -7,11 +7,11 @@ const userController = require('../controllers/userController');
 
 const router = express.Router({ mergeParams: true});
 
-// router.get('/', postController.getPosts);
+router.get('/', postController.getPosts);
 
-// router.get('/:id', postController.getPost);
+router.get('/:id', postController.getPost);
 
-// router.post('/new-post', postController.createPost);
+router.post('/new-post', postController.createPost);
 
 // router.put('/editPost', postController.editPost);
 

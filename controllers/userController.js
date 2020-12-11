@@ -4,12 +4,14 @@ const User = require('./../models/user')
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
+//Create json web token 
 const generateToken = (id) => {
     return jwt.sign({ id }, process.env.JWT_SECRET, {
         expiresIn: process.env.JWT_EXPIRED_IN
     });
 }
 
+//user register
 exports.register = catchAsync( async (req, res, next) => {
     let findUser = await User.findOne({email: req.body.email});
     if ( findUser !== null ){
@@ -47,6 +49,7 @@ exports.register = catchAsync( async (req, res, next) => {
     }
 });
 
+//user login
 exports.login = catchAsync( async(req, res, next) => {
     const user = await User.findOne({email: req.body.email});
     if (user === null){
@@ -80,6 +83,7 @@ exports.login = catchAsync( async(req, res, next) => {
     }
 });
 
+//check if user is login in
 exports.isLogin = catchAsync( async(req, res, next) => {
     if (req.cookies.jwt){
         const decoded = await util.promisify(jwt.verify)(
@@ -97,6 +101,7 @@ exports.isLogin = catchAsync( async(req, res, next) => {
     return next(401, 'Please login first');
 });
 
+//user logout
 exports.logout = catchAsync( async( req, res, next) => {
     res.clearCookie('jwt');
     res.status(200).json({

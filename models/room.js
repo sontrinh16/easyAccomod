@@ -7,6 +7,7 @@ const roomSchema = new Schema({
     area: {type: Number, required: true},
     floorIn: {type: Number},
     author: {type: Schema.Types.ObjectId, ref: 'User'},
+    services: [{type: String, default: null}],
     status: {type: String,  enum: ['available', 'rented','owner']}
 })
 

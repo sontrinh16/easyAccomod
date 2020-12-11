@@ -18,7 +18,7 @@ const userSchema = new Schema({
         road: String
     },
     authenticated: {type: Boolean, default: false},
-    favoriteRoom: [{type: Schema.Types.ObjectId, ref: 'Post',default: false}]
+    favoriteRoom: [{type: Schema.Types.ObjectId, ref: 'Post', default: null}]
 });
 
 const userModel = mongoose.model('User', userSchema);
