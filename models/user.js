@@ -10,7 +10,7 @@ const userSchema = new Schema({
     birthDay: {type: Date, default: null},
     phoneNumber: {type: String, default: null},
     socialID: {type: String, default: null},
-    address: {type: String, required: true},
+    address: {type: String, default: null},
     authenticated: {type: Boolean, default: false},
     favoriteRoom: [{type: Schema.Types.ObjectId, ref: 'Post', default: null}]
 });
