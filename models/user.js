@@ -8,9 +8,9 @@ const userSchema = new Schema({
     lastName: {type: String, trim: true},
     role: {type: String, enum: ['admin', 'renter','owner']},
     birthDay: {type: Date, default: null},
-    phoneNumber: {type: String, required: true},
-    socialID: {type: String, required: true},
-    address: {type: String},
+    phoneNumber: {type: String, default: null},
+    socialID: {type: String, default: null},
+    address: {type: String, required: true},
     authenticated: {type: Boolean, default: false},
     favoriteRoom: [{type: Schema.Types.ObjectId, ref: 'Post', default: null}]
 });
