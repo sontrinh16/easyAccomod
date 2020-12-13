@@ -3,32 +3,35 @@ const reviewRouter = require('./reviewRouter');
 const postController = require('../controllers/postController');
 const reviewController = require('../controllers/reviewController');
 const userController = require('../controllers/userController');
+const roomController =  require('../controllers/roomController');
 
 
 const router = express.Router({ mergeParams: true});
 
-router.get('/', postController.getPosts);
+//router.use(userController.isLogin)
+
+router.get('/',postController.getPosts);
 
 router.get('/:id', postController.getPost);
 
-router.post('/new-post', postController.createPost);
+router.post('/new-post', roomController.createRoom, postController.createPost);
 
-// router.put('/editPost', postController.editPost);
+// router.put('/:id/editPost', postController.editPost);
 
-// router.post('/prolongTimePost', postController.prolongTimePost);
+// router.put('/:id/prolongTimePost', postController.prolongTimePost);
 
-// router.get('/reportRoom', postController.reportRoom);
+// router.get('/:id/reportRoom', postController.reportRoom);
 
 // router.post('/search', postController.searchPost);
 
-// router.get('/add-favorite', userController.addFavorite);
+// router.get('/:id/add-favorite', userController.addFavorite);
 
-// router.put('/toggleActivePost', postController.toggleActivePost)
+// router.put('/:id/toggleActivePost', postController.toggleActivePost)
 
 // router.delete('/deletePost', postController.deletePost);
 
-// router.use('/review', reviewRouter);
+// router.use('/:id/review', reviewRouter);
 
-// router.get('/reiews', reviewController.getReviews);
+// router.get('/:id/reiews', reviewController.getReviews);
 
 module.exports = router;

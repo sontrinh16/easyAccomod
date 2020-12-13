@@ -7,7 +7,7 @@ const postSchema = new Schema({
     author: {type: Schema.Types.ObjectId, ref: 'User'},
     createdAt: {type: Date, default: Date.now},
     expiredAt: {type: Date}, 
-    //rooms: [{type: Schema.Types.ObjectId, ref: 'Room'}],
+    rooms: [{type: Schema.Types.ObjectId, ref: 'Room'}],
     address: {
         city: {type: String, required: true},
         district: {type: String, required: true},
