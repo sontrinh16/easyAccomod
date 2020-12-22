@@ -87,9 +87,9 @@ exports.login = catchAsync( async(req, res, next) => {
 
 //check if user is login in
 exports.isLogin = catchAsync( async(req, res, next) => {
-    if (req.headers.token){
+    if (req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer'){
         const decoded = await util.promisify(jwt.verify)(
-            req.headers.token,
+            req.headers.authorization.split(' ')[1],
             process.env.JWT_SECRET
         );
 
