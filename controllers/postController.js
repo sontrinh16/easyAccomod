@@ -38,6 +38,7 @@ exports.getPost = catchAsync(async (req, res, next) => {
 
 exports.createPost = catchAsync(async (req, res, next) => {
     let post = new Post(req.body);
+    post.author = req.user._id;
     post = await post.save();
 
     res.status(200).json({
