@@ -103,7 +103,7 @@ exports.isLogin = catchAsync( async(req, res, next) => {
 });
 
 exports.getUser = catchAsync( async(req, res, next) => {
-    let user = await User.findOne({_id: req.params.id}).populated('favoriteRoom');
+    let user = await User.findOne({_id: req.params.id}).populate('favoriteRoom');
     res.status(200).json({
         status: 'success',
         data: {
