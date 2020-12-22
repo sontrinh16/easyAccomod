@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 const postSchema = new Schema({
     author: {type: Schema.Types.ObjectId, ref: 'User'},
     createdAt: {type: Date, default: Date.now},
-    expiredIn: {type: Date, required: false}, 
+    expiredAt: {type: Date, required: false}, 
     rooms: [{type: Schema.Types.ObjectId, ref: 'Room'}],
     type: {type: String, required: false},
     address: {
