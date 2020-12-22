@@ -102,6 +102,16 @@ exports.isLogin = catchAsync( async(req, res, next) => {
     return next(401, 'Please login first');
 });
 
+exports.getUser = catchAsync( async(req, res, next) => {
+    let user = await User.findOne({_id: req.params.id});
+    res.status(200).json({
+        status: 'success',
+        data: {
+            user
+        }
+    })
+});
+
 exports.restrictedTo = (role) => {
     if (req.user.role === role){
         next();
