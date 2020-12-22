@@ -10,7 +10,7 @@ module.exports = (err, req, res, next) => {
     else{
         res.status(500).json({
             status: 'Error',
-            message: 'There something wrong with the server'
+            message: 'There is something wrong with the server'
         })
     }
 
