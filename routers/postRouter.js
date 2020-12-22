@@ -17,7 +17,7 @@ router.post('/new-post', roomController.createRoom, postController.createPost);
 
 router.put('/:id/editPost', postController.editPost);
 
-//router.get('/get-user-post', postController.getUserPost);
+router.get('/get-user-post', postController.getUserPost);
 
 //po router.put('/:id/prolongTimePost', postController.prolongTimePost);
 

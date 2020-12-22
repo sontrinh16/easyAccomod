@@ -15,7 +15,15 @@ exports.getPosts = catchAsync(async (req, res, next) => {
     });
 });
 
-//exports.getPosts
+exports.getUserPost = catchAsync(async (req, res, next) => {
+    const posts = await Post.find({author: req.user._id}).populate('author').populate('rooms');
+    res.status(200).json({
+        status: "success",
+        data: {
+            posts
+        }
+    });
+});
 
 exports.getPost = catchAsync(async (req, res, next) => {
     const post = await Post.findOne({_id: req.params.id}).populate('author').populate('rooms');
@@ -57,15 +65,3 @@ exports.addFavorite = catchAsync(async (req, res, next) => {
     });
 });
 
-// exports.reportRoom = catchAsync(async (req, res, next) => {
-//     let post = await Post.findOne({_id: req.params.id});
-//     post.reported.push(req.report._id);
-//     console.log(post);
-//     post = await post.save();
-//     res.status(200).json({
-//         status: 'success',
-//         data: {
-//             report: req.report
-//         }
-//     });
-// });
