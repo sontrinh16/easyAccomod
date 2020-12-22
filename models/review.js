@@ -6,10 +6,10 @@ const reviewSchema = new Schema({
     content: {type: String, required: true, minlength: 4, maxlength: 2000},
     author: {type: Schema.Types.ObjectId, ref: 'User'},
     created: {type: Date, default: Date.now}, 
-    score: {type: Number, required: true, default: 5},
-    authenticate: {type: Boolean, default: false}
+    star: {type: Number, required: true, default: 5, min: 0},
+    belongTo: {type: Schema.Types.ObjectId, ref: 'Post'}
 })
 
-const reviewtModel = mongoose.model('Review', reviewSchema);
+const reviewModel = mongoose.model('Review', reviewSchema);
 
 module.exports = reviewModel;

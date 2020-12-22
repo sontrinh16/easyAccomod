@@ -3,6 +3,7 @@ const appError = require('./../utils/appError');
 const User = require('./../models/user')
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const util = require('util');
 
 //Create json web token 
 const generateToken = (id) => {
@@ -85,9 +86,9 @@ exports.login = catchAsync( async(req, res, next) => {
 
 //check if user is login in
 exports.isLogin = catchAsync( async(req, res, next) => {
-    if (req.cookies.jwt){
+    if (req.headers.token){
         const decoded = await util.promisify(jwt.verify)(
-            req.cookies.jwt,
+            req.headers.token,
             process.env.JWT_SECRET
         );
 
@@ -101,10 +102,10 @@ exports.isLogin = catchAsync( async(req, res, next) => {
     return next(401, 'Please login first');
 });
 
-//user logout
-exports.logout = catchAsync( async( req, res, next) => {
-    res.clearCookie('jwt');
-    res.status(200).json({
-        status: 'sucess'
-    })
-})
+exports.restrictedTo = (role) => {
+    if (req.user.role === role){
+        next();
+    }
+    else return next(new appError(401,'user are not authorized'));
+}
+

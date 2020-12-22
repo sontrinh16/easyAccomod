@@ -8,6 +8,7 @@ const cors = require('cors')
 const userRouter = require('./routers/userRouter');
 const postRouter = require('./routers/postRouter');
 const appError = require('./utils/appError');
+const globalErrorHandler = require('./controllers/errorHandler');
 
 dotenv.config({path: path.join(__dirname, 'config.env')})
 

@@ -2,12 +2,11 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const postSchema = new Schema({
-    title: {type: String, required: true, minlength: 4, maxlength: 150},
-    content: {type: String, required: true, minlength: 4, maxlength: 20000},
     author: {type: Schema.Types.ObjectId, ref: 'User'},
     createdAt: {type: Date, default: Date.now},
-    expiredAt: {type: Date}, 
+    expiredAt: {type: Date, required: false}, 
     rooms: [{type: Schema.Types.ObjectId, ref: 'Room'}],
+    type: {type: String, required: false},
     address: {
         city: {type: String, required: true},
         district: {type: String, required: true},
@@ -18,7 +17,10 @@ const postSchema = new Schema({
     authenticate: {type: Boolean, default: false},
     like: {type: Number, default: 0},
     saved: {type: Number, default: 0},
-    reported: {type: Boolean, default: false}
+    //reported: [{type: Schema.Types.ObjectId, ref: 'Report', default: null}],
+    images: [{
+        link: String
+    }]
 })
 
 const postModel = mongoose.model('Post', postSchema);
