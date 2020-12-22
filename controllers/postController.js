@@ -6,9 +6,9 @@ const User = require('../models/user');
 const roomController = require('./../controllers/roomController');
 
 exports.getPosts = catchAsync(async (req, res, next) => {
-    const posts = await Post.find({}).populate('author').populate('rooms');
+    let posts = await Post.find({}).populate('author').populate('rooms');
     //posts = posts.filter(post => { post.authenticate == true});
-    posts = posts.map(post => {delete post.authenticate});
+    //posts = posts.map(post => post.authenticate = null);
     res.status(200).json({
         status: "success",
         data: {
@@ -18,9 +18,9 @@ exports.getPosts = catchAsync(async (req, res, next) => {
 });
 
 exports.getUserPost = catchAsync(async (req, res, next) => {
-    const posts = await Post.find({author: req.user._id}).populate('author').populate('rooms');
+    let posts = await Post.find({author: req.user._id}).populate('author').populate('rooms');
     //posts = posts.filter(post => { post.authenticate == true});
-    posts = posts.map(post => {delete post.authenticate});
+    //posts = posts.map(post => post.authenticate = null);
     res.status(200).json({
         status: "success",
         data: {
@@ -30,8 +30,8 @@ exports.getUserPost = catchAsync(async (req, res, next) => {
 });
 
 exports.getPost = catchAsync(async (req, res, next) => {
-    const post = await Post.findOne({_id: req.params.id}).populate('author').populate('rooms');
-    delete post.authenticate;
+    let post = await Post.findOne({_id: req.params.id}).populate('author').populate('rooms');
+    //post.authenticate = null;
     res.status(200).json({
         status: "success",
         data: {
@@ -70,3 +70,6 @@ exports.addFavorite = catchAsync(async (req, res, next) => {
     });
 });
 
+exports.authenticatePost = catchAsync( async( req, res, next) => {
+
+})
