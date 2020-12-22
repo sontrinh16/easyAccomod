@@ -17,6 +17,7 @@ const postSchema = new Schema({
     authenticate: {type: Boolean, default: false},
     like: {type: Number, default: 0},
     saved: {type: Number, default: 0},
+    postPrice: {type: String, default: null},
     //reported: [{type: Schema.Types.ObjectId, ref: 'Report', default: null}],
     images: [{
         link: String

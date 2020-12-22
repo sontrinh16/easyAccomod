@@ -19,7 +19,7 @@ router.put('/:id/editPost', postController.editPost);
 
 router.get('/get-user-post', postController.getUserPost);
 
-//po router.put('/:id/prolongTimePost', postController.prolongTimePost);
+//router.put('/:id/prolongTimePost', postController.prolongTimePost);
 
 router.post('/:id/reportRoom', reportController.createReport);
 
