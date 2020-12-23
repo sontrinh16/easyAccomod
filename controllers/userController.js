@@ -105,18 +105,51 @@ exports.isLogin = catchAsync( async(req, res, next) => {
 
 exports.getUser = catchAsync( async(req, res, next) => {
     let user = await User.findOne({_id: req.params.id}).populate('favoriteRoom');
-    res.status(200).json({
-        status: 'success',
-        data: {
-            user
-        }
-    })
+    if(user){
+        res.status(200).json({
+            status: 'success',
+            data: {
+                user
+            }
+        })
+    }
+    else{
+        return next( new appError(404, 'User not found'));
+    }
 });
 
-exports.restrictedTo = (role) => {
-    if (req.user.role === role){
-        next();
+exports.getAllOwner = catchAsync(async(req, res, next) => {
+    let users = await User.find({role: 'owner'}).populate('favoriteRoom');
+    if (users){
+        res.status(200).json({
+            status: 'success',
+            data: {
+                user
+            }
+        });
     }
-    else return next(new appError(401,'user are not authorized'));
-}
+    else{
+        return next(new appError(404, 'No user found'));
+    }
+});
 
+exports.authenticateOwner = catchAsync(async(req, res, next) => {
+    let user = await Post.findOneAndUpdate({_id: req.params.id}, {authenticated: true}, {
+        new: true
+    });
+    res.status(200).json({
+        status: 'success'
+    });
+});
+
+exports.restrictedTo = (...roles) => {
+    return (req, res, next) => {
+      if (!roles.includes(req.user.role)) {
+        return next(
+          new appError(403, 'You do not have permission to perform this action')
+        );
+      }
+  
+      next();
+    };
+  };

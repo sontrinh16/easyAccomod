@@ -1,6 +1,5 @@
 const express = require('express');
 const userController = require('../controllers/userController');
-const adminRouter = require('../routers/adminRouter');
 
 const router = express.Router({ mergeParams: true});
 
@@ -10,7 +9,7 @@ router.post('/login', userController.login);
 
 router.get('/:id', userController.getUser);
 
-router.use('/admin', adminRouter);
+router.get('/:id/authenticate-owner',userController.restrictedTo('admin') , userController.authenticateOwner);
 
 //router.post('/reset-pass', userController.resetPass);
 

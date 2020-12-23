@@ -7,6 +7,7 @@ const mongoose = require('mongoose');
 const cors = require('cors')
 const userRouter = require('./routers/userRouter');
 const postRouter = require('./routers/postRouter');
+const adminRouter = require('./routers/adminRouter');
 const appError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorHandler');
 
@@ -37,6 +38,9 @@ app.use('/api/user', userRouter);
 
 //post routes
 app.use('/api/post', postRouter);
+
+//admin routes
+app.use('/api/admin', adminRouter);
 
 //invalid routes
 app.all('*', (req, res, next) => {

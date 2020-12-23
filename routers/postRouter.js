@@ -31,6 +31,8 @@ router.get('/:id/add-favorite', postController.addFavorite);
 
 // router.delete('/deletePost', postController.deletePost);
 
+router.get('/:id/authenticate-post', userController.restrictedTo('admin'), postController.authenticatePost);
+
 router.post('/:id/new-review', reviewController.createReview);
 
 //router.get('/:id/reiews', reviewController.getReviews);
