@@ -3,6 +3,7 @@ const appError = require('./../utils/appError');
 const Post = require('./../models/post');
 const Room = require('./../models/room');
 const User = require('../models/user');
+const Review = require('../models/review');
 const roomController = require('./../controllers/roomController');
 
 exports.getPosts = catchAsync(async (req, res, next) => {
@@ -29,7 +30,6 @@ exports.getPosts = catchAsync(async (req, res, next) => {
 
 exports.getUserPost = catchAsync(async (req, res, next) => {
     let posts = await Post.find({author: req.user._id}).populate('author').populate('rooms');
-    //posts = posts.filter(post => { post.authenticate == true});
     if (posts.length !== 0){
         posts = posts.map(post => {
             delete post.authenticate;
@@ -52,10 +52,12 @@ exports.getPost = catchAsync(async (req, res, next) => {
     if (post !== null)
     {
         delete post.authenticate;
+        let reviews = await Review.find({belongTo: req.params.id}).populate('author');
         res.status(200).json({
             status: "success",
             data: {
-                post
+                post,
+                reviews
             }
         });
     }
@@ -96,6 +98,39 @@ exports.addFavorite = catchAsync(async (req, res, next) => {
     });
 });
 
+exports.prolongTimePost = catchAsync(async (req, res, next) => {
+    let post = await User.findOneAndUpdate({ _id: req.params.id }, {
+        expiredAt: req.body.expiredAt,
+        postPrice: req.body.postPrice
+    }, {
+        new: true,
+        runValidators: true
+    });
+    res.status(200).json({
+        status: 'success'
+    });
+});
+
+exports.toggleActivePost = catchAsync(async (req, res, next) => {
+    let post = await Post.findOne({_id: req.params.id});
+    if(post){
+        if(post.status === 'active'){
+            post.status = 'inactive';
+        }
+        else {
+            post.status = 'active';
+        }
+        post = await post.save();
+
+        res.status(200).json({
+            status: 'success'
+        });
+    }
+    else{
+        return next(new appError(404, 'Post not found'));
+    }
+});
+
 exports.authenticatePost = catchAsync(async(req, res, next) => {
     let post = await Post.findOneAndUpdate({_id: req.params.id}, {authenticate: true}, {
         new: true
@@ -103,4 +138,4 @@ exports.authenticatePost = catchAsync(async(req, res, next) => {
     res.status(200).json({
         status: 'success'
     });
-})
+});

@@ -19,7 +19,7 @@ router.put('/:id/editPost', postController.editPost);
 
 router.get('/get-user-post', postController.getUserPost);
 
-//router.put('/:id/prolongTimePost', postController.prolongTimePost);
+router.put('/:id/prolong-time-post', postController.prolongTimePost);
 
 router.post('/:id/reportRoom', reportController.createReport);
 
@@ -27,7 +27,7 @@ router.post('/:id/reportRoom', reportController.createReport);
 
 router.get('/:id/add-favorite', postController.addFavorite);
 
-//router.put('/:id/toggleActivePost', postController.toggleActivePost)
+router.put('/:id/toggle-active-post', postController.toggleActivePost)
 
 // router.delete('/deletePost', postController.deletePost);
 

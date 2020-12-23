@@ -18,6 +18,7 @@ const postSchema = new Schema({
     like: {type: Number, default: 0},
     saved: {type: Number, default: 0},
     postPrice: {type: String, default: null},
+    status: {type: String, enum: ['active', 'inactive'], default: 'active'},
     //reported: [{type: Schema.Types.ObjectId, ref: 'Report', default: null}],
     images: [{
         link: String
