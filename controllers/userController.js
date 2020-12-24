@@ -94,13 +94,17 @@ exports.isLogin = catchAsync( async(req, res, next) => {
         );
 
         const user = await User.findOne({_id: decoded.id});
-        if (user === null) {
-            return next(401, 'Please login first');
+        if (!user) {
+            return next(404, 'User not found');
         }
-        req.user = user;
-        return next();
+        else{
+            req.user = user;
+            return next();
+        }
     }
-    return next(401, 'Please login first');
+    else {
+        return next(new appError(401, 'Please login first'));
+    }
 });
 
 exports.getUser = catchAsync( async(req, res, next) => {

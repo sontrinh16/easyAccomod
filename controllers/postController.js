@@ -30,11 +30,8 @@ exports.getPosts = catchAsync(async (req, res, next) => {
 
 exports.getUserPost = catchAsync(async (req, res, next) => {
     let posts = await Post.find({author: req.user._id}).populate('author').populate('rooms');
+    console.log(req.user);
     if (posts.length !== 0){
-        posts = posts.map(post => {
-            delete post.authenticate;
-            return post;
-        });
         res.status(200).json({
             status: "success",
             data: {
@@ -46,6 +43,11 @@ exports.getUserPost = catchAsync(async (req, res, next) => {
         return next(new appError(404, 'No posts found'));
     }
 });
+
+exports.check = (req, res, next) => {
+    console.log(req.user);
+    return next();
+};
 
 exports.getPost = catchAsync(async (req, res, next) => {
     let post = await Post.findOne({_id: req.params.id}).populate('author').populate('rooms');
@@ -90,12 +92,18 @@ exports.editPost = catchAsync(async (req, res, next) => {
 });
 
 exports.addFavorite = catchAsync(async (req, res, next) => {
-    let user = await User.findOneAndUpdate({ _id: req.user._id }, {favoriteRoom: req.user.favoriteRoom}, {
-        new: true
-    });
+    let post = await Post.findOne({ _id: req.params.id });
+    let user = req.user;
+    if (post){
+        user.favoriteRoom.push(post._id);
+        user = await user.save();
     res.status(200).json({
         status: 'success'
     });
+    }
+    else {
+        return next(new appError(404, 'Post not found'))
+    }
 });
 
 exports.prolongTimePost = catchAsync(async (req, res, next) => {

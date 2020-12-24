@@ -9,15 +9,19 @@ const router = express.Router({ mergeParams: true});
 
 router.get('/:id', postController.getPost);
 
-router.get('/',postController.getPosts);
+//router.get('/',postController.getPosts);
 
 router.use(userController.isLogin);
 
+router.get('/',postController.getUserPost);
+
+router.post('/get-user-post', postController.getUserPost);
+
 router.post('/new-post', roomController.createRoom, postController.createPost);
 
-router.put('/:id/editPost', postController.editPost);
+router.post('/:id/editPost', postController.editPost);
 
-router.get('/get-user-post', postController.getUserPost);
+//router.get('/get-user-post', postController.getPosts);
 
 router.put('/:id/prolong-time-post', postController.prolongTimePost);
 
