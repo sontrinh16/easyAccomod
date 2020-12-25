@@ -8,9 +8,9 @@ const roomController = require('./../controllers/roomController');
 
 exports.getPosts = catchAsync(async (req, res, next) => {
     let posts = await Post.find({}).populate('author').populate('rooms');
-    // if (req.user.role !== 'admin'){
-    //     //posts = posts.filter(post => { post.authenticate == true});
-    // }
+    if (req.user.role !== 'admin'){
+        posts = posts.filter(post => { post.authenticate == true});
+    }
     if (posts.length !== 0){
         posts = posts.map(post => {
             delete post.authenticate;
@@ -96,6 +96,22 @@ exports.addFavorite = catchAsync(async (req, res, next) => {
     let user = req.user;
     if (post){
         user.favoriteRoom.push(post._id);
+        user = await user.save();
+    res.status(200).json({
+        status: 'success'
+    });
+    }
+    else {
+        return next(new appError(404, 'Post not found'))
+    }
+});
+
+exports.removeFavorite = catchAsync(async (req, res, next) => {
+    let post = await Post.findOne({ _id: req.params.id });
+    let user = req.user;
+    if (post){
+        if (user.favoriteRoom.includes(post._id))
+        user.favoriteRoom.splice(user.favoriteRoom.indexOf(post._id),1);
         user = await user.save();
     res.status(200).json({
         status: 'success'

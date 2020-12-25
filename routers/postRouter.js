@@ -9,11 +9,11 @@ const router = express.Router({ mergeParams: true});
 
 router.get('/:id', postController.getPost);
 
-//router.get('/',postController.getPosts);
+router.get('/',postController.getPosts);
 
 router.use(userController.isLogin);
 
-router.get('/',postController.getUserPost);
+//router.get('/',postController.getUserPost);
 
 router.post('/get-user-post', postController.getUserPost);
 

@@ -15,7 +15,6 @@ const postSchema = new Schema({
         addressDetail: String
     },
     authenticate: {type: Boolean, default: false},
-    like: {type: Number, default: 0},
     saved: {type: Number, default: 0},
     postPrice: {type: String, default: null},
     status: {type: String, enum: ['active', 'inactive'], default: 'active'},
