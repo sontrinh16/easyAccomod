@@ -7,10 +7,7 @@ const Review = require('../models/review');
 const roomController = require('./../controllers/roomController');
 
 exports.getPosts = catchAsync(async (req, res, next) => {
-    let posts = await Post.find({}).populate('author').populate('rooms');
-    if (req.user.role !== 'admin'){
-        posts = posts.filter(post => { post.authenticate == true});
-    }
+    let posts = await Post.find({authenticate: true}).populate('author').populate('rooms');
     if (posts.length !== 0){
         posts = posts.map(post => {
             delete post.authenticate;
