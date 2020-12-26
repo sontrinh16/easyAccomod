@@ -25,6 +25,21 @@ exports.getPosts = catchAsync(async (req, res, next) => {
     }
 });
 
+exports.getAllPosts = catchAsync(async (req, res, next) => {
+    let posts = await Post.find({}).populate('author').populate('rooms');
+    if (posts.length !== 0){
+        res.status(200).json({
+            status: "success",
+            data: {
+                posts
+            }
+        });
+    }
+    else {
+        return next(new appError(404, 'No posts found'));
+    }
+});
+
 exports.getUserPost = catchAsync(async (req, res, next) => {
     let posts = await Post.find({author: req.user._id}).populate('author').populate('rooms');
     console.log(req.user);
@@ -94,6 +109,9 @@ exports.addFavorite = catchAsync(async (req, res, next) => {
     if (post){
         user.favoriteRoom.push(post._id);
         user = await user.save();
+        post = await Post.findOneAndUpdate({_id: post._id}, {saved: post.saved + 1},{
+            new: true
+        });
     res.status(200).json({
         status: 'success'
     });
@@ -107,12 +125,17 @@ exports.removeFavorite = catchAsync(async (req, res, next) => {
     let post = await Post.findOne({ _id: req.params.id });
     let user = req.user;
     if (post){
-        if (user.favoriteRoom.includes(post._id))
-        user.favoriteRoom.splice(user.favoriteRoom.indexOf(post._id),1);
-        user = await user.save();
-    res.status(200).json({
-        status: 'success'
-    });
+        if (user.favoriteRoom.includes(post._id)){
+            user.favoriteRoom.splice(user.favoriteRoom.indexOf(post._id),1);
+            user = await user.save();
+            post = await Post.findOneAndUpdate({_id: post._id}, {saved: post.saved - 1},{
+                new: true
+            });
+            res.status(200).json({
+                status: 'success'
+            });
+        }
+    return next(new appError(404, ' Post not found in user favorite list'));
     }
     else {
         return next(new appError(404, 'Post not found'))
@@ -121,11 +144,8 @@ exports.removeFavorite = catchAsync(async (req, res, next) => {
 
 exports.prolongTimePost = catchAsync(async (req, res, next) => {
     let post = await User.findOneAndUpdate({ _id: req.params.id }, {
-        expiredAt: req.body.expiredAt,
+        expiredAt: Date.parse(req.body.expiredAt),
         postPrice: req.body.postPrice
-    }, {
-        new: true,
-        runValidators: true
     });
     res.status(200).json({
         status: 'success'
