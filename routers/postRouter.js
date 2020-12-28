@@ -12,6 +12,8 @@ router.get('/:id', postController.getPost);
 
 router.get('/',postController.getPosts);
 
+router.post('/search', postController.searchPost);
+
 router.use(userController.isLogin);
 
 router.get('/get-all-posts', userController.restrictedTo('admin'), postController.getAllPosts);
@@ -28,7 +30,7 @@ router.put('/:id/prolong-time-post',userController.restrictedTo('admin'), postCo
 
 router.post('/:id/reportRoom',userController.restrictedTo('renter'), reportController.createReport);
 
-// router.post('/search', postController.searchPost);
+//router.post('/search', postController.searchPost);
 
 router.get('/:id/add-favorite',userController.restrictedTo('renter'), postController.addFavorite);
 

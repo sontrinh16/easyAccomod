@@ -5,6 +5,8 @@ const Room = require('./../models/room');
 const User = require('../models/user');
 const Review = require('../models/review');
 const roomController = require('./../controllers/roomController');
+const getFilter = require('../utils/getFilter');
+const { post } = require('../routers/userRouter');
 
 exports.getPosts = catchAsync(async (req, res, next) => {
     let posts = await Post.find({authenticate: true}).populate('author').populate('rooms');
@@ -92,6 +94,66 @@ exports.createPost = catchAsync(async (req, res, next) => {
         status: "success"
     });
    
+});
+
+exports.searchPost = catchAsync(async (req, res, next) => {
+    let postFilter = {};
+    let roomFilter = {};
+    let rangeFilter = {};
+    if (req.body.address){
+        for ( i in req.body.address){
+            let queryName = `address.${i}`;
+            postFilter[queryName]  = req.body.address[i];
+        }
+    }
+    if (req.body.minPrice){
+        rangeFilter.minPrice = req.body.minPrice;
+    }
+    if (req.body.maxPrice){
+        rangeFilter.maxPrice = req.body.maxPrice;
+    }
+    if (req.body.type){
+        postFilter.type = req.body.type;
+    }
+    if (req.body.minArea){
+        rangeFilter.minArea = req.body.minArea; 
+    }
+    //console.log(postFilter)
+    if (req.body.maxArea){
+        rangeFilter.maxArea = req.body.maxArea;
+    }
+    //console.log(rangeFilter)
+    if (req.body.services){
+        roomFilter.services = req.body.services;
+    }
+    console.log(roomFilter)
+    let posts = await Post.find(postFilter).populate('author').populate('rooms');
+    //let rooms = await Room.find(roomFilter);
+    if (rangeFilter){
+        if(rangeFilter.minPrice){
+            posts = posts.filter(post => parseInt(post.price) >= parseInt(rangeFilter.minPrice));
+        }
+        if(rangeFilter.maxPrice){
+            posts = posts.filter(post => parseInt(post.price) <= parseInt(rangeFilter.minPrice))
+        }
+        if (rangeFilter.minArea){
+            posts = posts.filter(post => post.rooms[0].area >= rangeFilter.minArea);
+        }
+        if (rangeFilter.maxArea){
+            posts = posts.filter(post => post.rooms[0].area <= rangeFilter.maxArea);
+        }
+        if (roomFilter.services){
+            posts = posts.filter(post => {
+                return roomFilter.services.some(r => post.rooms[0].services.indexOf(r) >= 0);
+            })
+        }
+    }
+    res.status(200).json({
+        status: 'success',
+        data: {
+            posts
+        }
+    });
 });
 
 exports.editPost = catchAsync(async (req, res, next) => {
