@@ -6,6 +6,7 @@ exports.createReview = catchAsync( async(req, res, next) => {
     if (req.body){
         let review = new Review(req.body);
         review.belongTo = req.params.id;
+        review.author = req.user._id;
         review = await review.save();
         req.review = review;
         res.status(200).json({
