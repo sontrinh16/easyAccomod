@@ -112,7 +112,7 @@ exports.getUser = catchAsync( async(req, res, next) => {
 });
 
 exports.getAllOwner = catchAsync(async(req, res, next) => {
-    let users = await User.find({role: 'owner'}).populate('favoriteRoom');
+    let users = await User.find({}).populate('favoriteRoom');
     if (users){
         res.status(200).json({
             status: 'success',

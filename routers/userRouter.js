@@ -9,11 +9,11 @@ router.post('/login', userController.login);
 
 router.use(userController.isLogin);
 
+router.get('/get-all-owner', userController.restrictedTo('admin'), userController.getAllOwner);
+
 router.get('/:id', userController.getUser);
 
 router.get('/:id/authenticate-owner',userController.restrictedTo('admin') ,userController.authenticateOwner);
-
-router.get('/get-all-owner', userController.restrictedTo('admin'), userController.getAllOwner)
 
 //router.post('/reset-pass', userController.resetPass);
 
