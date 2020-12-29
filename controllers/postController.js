@@ -113,7 +113,7 @@ exports.searchPost = catchAsync(async (req, res, next) => {
         rangeFilter.maxPrice = req.body.maxPrice;
     }
     if (req.body.type){
-        postFilter.type = req.body.type;
+        postFilter.type = {$in: req.body.type};
     }
     if (req.body.minArea){
         rangeFilter.minArea = req.body.minArea; 
