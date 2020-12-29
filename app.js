@@ -38,7 +38,7 @@ app.use(bodyParser.json());
 app.use(express.urlencoded({extended: true}));
 // app.use(upload.array()); 
 app.use(cookieParser());
-app.use(cors());
+app.use(cors({credentials: true, origi: 'http://localhost:3000'}));
 
 const server = require('http').createServer(app);
 const io = require('socket.io')(server, {
