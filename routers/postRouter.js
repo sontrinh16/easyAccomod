@@ -10,7 +10,6 @@ const userController = require('../controllers/userController');
 const roomController =  require('../controllers/roomController');
 const reportController = require('../controllers/reportController');
 const Post = require('./../models/post');
-const e = require('express');
 const appError = require('../utils/appError');
 
 const router = express.Router({ mergeParams: true});

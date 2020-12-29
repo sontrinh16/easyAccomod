@@ -91,7 +91,10 @@ exports.createPost = catchAsync(async (req, res, next) => {
     post = await post.save();
 
     res.status(200).json({
-        status: "success"
+        status: "success",
+        data: {
+            post
+        }
     });
    
 });
@@ -155,8 +158,6 @@ exports.searchPost = catchAsync(async (req, res, next) => {
         }
     });
 });
-
-exports.uploadImage = 
 
 exports.editPost = catchAsync(async (req, res, next) => {
     let post = await Post.findOneAndUpdate({ _id: req.params.id }, req.body, {

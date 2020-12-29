@@ -32,6 +32,9 @@ db.on('error', (err) => {
 
 //MIDDLEWARE
 const app = express();
+const server = require('http').createServer(app);
+const io = require('socket.io')(server);
+
 app.use(bodyParser.json());
 app.use(express.urlencoded({extended: true}));
 // app.use(upload.array()); 
@@ -63,3 +66,5 @@ app.use(globalErrorHandler);
 app.listen(process.env.PORT, () => {
     console.log(`connect to port ${process.env.PORT}`);
 })
+
+exports.io = io;
