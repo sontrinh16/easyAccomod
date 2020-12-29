@@ -8,6 +8,6 @@ const notiSchema = new Schema({
     seen:{type: Boolean, default: false}
 });
 
-const notitModel = mongoose.model('Notification', notiSchema);
+const notiModel = mongoose.model('Notification', notiSchema);
 
 module.exports = notiModel;

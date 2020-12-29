@@ -13,6 +13,7 @@ const FormData = require('form-data')
 const userRouter = require('./routers/userRouter');
 const postRouter = require('./routers/postRouter');
 const adminRouter = require('./routers/adminRouter');
+const notificationRouter = require('./routers/notiRouter');
 const appError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorHandler');
 
@@ -50,7 +51,7 @@ app.use('/api/post', postRouter);
 //admin routes
 app.use('/api/admin', adminRouter);
 
-app.use('/api/notification', )
+app.use('/api/notification', notificationRouter);
 
 //invalid routes
 app.all('*', (req, res, next) => {
@@ -67,5 +68,3 @@ app.use(globalErrorHandler);
 app.listen(process.env.PORT, () => {
     console.log(`connect to port ${process.env.PORT}`);
 })
-
-exports.io = io;

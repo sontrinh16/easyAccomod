@@ -9,9 +9,12 @@ const userRouter = require('./userRouter');
 const postRouter = require('./postRouter');
 
 const router = express.Router({ mergeParams: true});
+
 router.use(userController.isLogin);
 
-router.get('/', userController.restrictedTo('owner','admin'), notificationController.getNotifications)
+router.get('/', userController.restrictedTo('owner','admin'), notificationController.getNotifications);
+
+router.get('/:id', userController.restrictedTo('owner','admin'), notificationController.seenNotification);
 
 //router.use(userController.isLogin);
 
