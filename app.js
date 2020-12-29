@@ -6,7 +6,10 @@ const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const multer  = require('multer');
-const upload = multer({ dest: 'uploads/' })
+const fs = require('fs');
+const axios = require('axios');
+const upload = multer({dest: 'images/'})
+const FormData = require('form-data')
 const userRouter = require('./routers/userRouter');
 const postRouter = require('./routers/postRouter');
 const adminRouter = require('./routers/adminRouter');
@@ -31,6 +34,7 @@ db.on('error', (err) => {
 const app = express();
 app.use(bodyParser.json());
 app.use(express.urlencoded({extended: true}));
+// app.use(upload.array()); 
 app.use(cookieParser());
 app.use(cors());
 
@@ -44,12 +48,31 @@ app.use('/api/post', postRouter);
 //admin routes
 app.use('/api/admin', adminRouter);
 
-app.post('/api/test',upload.single('image') , (req, res, next) => {
-    console.log(req.body);
-    console.log(req.file);
-    res.status(200).json({
-        status: 'success'
-    });
+app.post('/api/test',upload.single('image') , async (req, res, next) => {
+    try{
+            console.log(req.body)
+            console.log(req.file)
+            const data = {
+                images: req.file.stream
+            }
+            const imgurData = await axios.post(
+                'https://api.imgur.com/3/upload',
+                data,
+                {
+                    headers: {
+                        'Authorization': 'Client-ID 546c25a59c58ad7',
+                        'content-type': 'multipart/form-data'
+                    }
+                }
+            ) 
+            console.log(imgurData.response)
+            res.status(200).json({
+                status: 'success'
+            });
+        }
+        catch(err){
+            console.log(err.response ? err.response.data.data : err)
+        }
 })
 
 //invalid routes
