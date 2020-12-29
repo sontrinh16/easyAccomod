@@ -60,17 +60,6 @@ exports.login = catchAsync( async(req, res, next) => {
         const match = await bcrypt.compare(req.body.password, user.password);
         if (match === true) {
             const token = generateToken(user._id);
-
-            const cookieOptions = {
-                expires: new Date(
-                    Date.now() + 24 * 60 *60 *1000
-                ),
-                httpOnly: true,
-                sameSite: 'None',
-                secure: true
-            }
-        
-            res.cookie('jwt', token, cookieOptions);
             res.status(200).json({
                 status: 'success',
                 data: {

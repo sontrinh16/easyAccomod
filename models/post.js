@@ -19,9 +19,7 @@ const postSchema = new Schema({
     postPrice: {type: String, default: null},
     status: {type: String, enum: ['active', 'inactive'], default: 'active'},
     //reported: [{type: Schema.Types.ObjectId, ref: 'Report', default: null}],
-    images: [{
-        link: String
-    }]
+    images: [{type: String}]
 })
 
 const postModel = mongoose.model('Post', postSchema);

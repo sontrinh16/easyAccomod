@@ -48,32 +48,6 @@ app.use('/api/post', postRouter);
 //admin routes
 app.use('/api/admin', adminRouter);
 
-app.post('/api/test',upload.single('image') , async (req, res, next) => {
-    try{
-            //console.log(req.file.buffer)
-            let data = new FormData();
-            data.append('image', req.file.buffer.toString('base64'));
-            console.log(data)
-            const imgurData = await axios.post(
-                'https://api.imgur.com/3/upload',
-                data,
-                {
-                    headers: {
-                        'Authorization': 'Client-ID 546c25a59c58ad7',
-                        'content-type': 'multipart/form-data'
-                    }
-                }
-            ) 
-            console.log(imgurData)
-            res.status(200).json({
-                status: 'success'
-            });
-        }
-        catch(err){
-            console.log(err.response ? err.response.data.data : err)
-        }
-})
-
 //invalid routes
 app.all('*', (req, res, next) => {
     next(new appError(404, 'invalid URL'));
