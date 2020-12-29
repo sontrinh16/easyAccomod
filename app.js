@@ -44,7 +44,7 @@ app.use('/api/post', postRouter);
 //admin routes
 app.use('/api/admin', adminRouter);
 
-app.post('/api/test',upload.single('avatar') , (req, res, next) => {
+app.post('/api/test',upload.single('image') , (req, res, next) => {
     console.log(req.body);
     console.log(req.file);
     res.status(200).json({
