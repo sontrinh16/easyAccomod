@@ -6,7 +6,7 @@ const User = require('../models/user');
 const Review = require('../models/review');
 const roomController = require('./../controllers/roomController');
 const getFilter = require('../utils/getFilter');
-const { post } = require('../routers/userRouter');
+const io = require('../app');
 
 exports.getPosts = catchAsync(async (req, res, next) => {
     let posts = await Post.find({authenticate: true}).populate('author').populate('rooms');
@@ -89,6 +89,16 @@ exports.createPost = catchAsync(async (req, res, next) => {
         post.authenticate = true;
     }
     post = await post.save();
+
+    let notification = new Notification({
+        ID: post._id,
+        type: 'post'
+    });
+
+    notification = await notification.save();
+    io.on('connection', (socket) => {
+        socket.emit("notification")
+    })
 
     res.status(200).json({
         status: "success",
