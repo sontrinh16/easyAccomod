@@ -58,7 +58,7 @@ exports.login = catchAsync( async(req, res, next) => {
     }
     else {
         const match = await bcrypt.compare(req.body.password, user.password);
-        if (match) {
+        if (match === true) {
             const token = generateToken(user._id);
 
             const cookieOptions = {

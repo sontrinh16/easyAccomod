@@ -8,7 +8,7 @@ const cors = require('cors');
 const multer  = require('multer');
 const fs = require('fs');
 const axios = require('axios');
-const upload = multer({dest: 'images/'})
+const upload = multer();
 const FormData = require('form-data')
 const userRouter = require('./routers/userRouter');
 const postRouter = require('./routers/postRouter');
@@ -50,11 +50,10 @@ app.use('/api/admin', adminRouter);
 
 app.post('/api/test',upload.single('image') , async (req, res, next) => {
     try{
-            console.log(req.body)
-            console.log(req.file)
-            const data = {
-                images: req.file.stream
-            }
+            //console.log(req.file.buffer)
+            let data = new FormData();
+            data.append('image', req.file.buffer.toString('base64'));
+            console.log(data)
             const imgurData = await axios.post(
                 'https://api.imgur.com/3/upload',
                 data,
@@ -65,7 +64,7 @@ app.post('/api/test',upload.single('image') , async (req, res, next) => {
                     }
                 }
             ) 
-            console.log(imgurData.response)
+            console.log(imgurData)
             res.status(200).json({
                 status: 'success'
             });
