@@ -21,7 +21,7 @@ exports.createReview = catchAsync( async(req, res, next) => {
 });
 
 exports.getReviews = catchAsync( async(req, res, next) => {
-    let reviews = await Review.find({});
+    let reviews = await Review.find({}).populate('belongTo').populate('author');
     res.status(200).json({
         status: "success",
         data: {
