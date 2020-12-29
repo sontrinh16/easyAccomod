@@ -4,7 +4,9 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
-const cors = require('cors')
+const cors = require('cors');
+const multer  = require('multer');
+const upload = multer({ dest: 'uploads/' })
 const userRouter = require('./routers/userRouter');
 const postRouter = require('./routers/postRouter');
 const adminRouter = require('./routers/adminRouter');
@@ -41,6 +43,14 @@ app.use('/api/post', postRouter);
 
 //admin routes
 app.use('/api/admin', adminRouter);
+
+app.post('/api/test',upload.single('avatar') , (req, res, next) => {
+    console.log(req.body);
+    console.log(req.file);
+    res.status(200).json({
+        status: 'success'
+    });
+})
 
 //invalid routes
 app.all('*', (req, res, next) => {

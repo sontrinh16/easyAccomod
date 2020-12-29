@@ -134,7 +134,7 @@ exports.searchPost = catchAsync(async (req, res, next) => {
             posts = posts.filter(post => parseInt(post.price) >= parseInt(rangeFilter.minPrice));
         }
         if(rangeFilter.maxPrice){
-            posts = posts.filter(post => parseInt(post.price) <= parseInt(rangeFilter.minPrice))
+            posts = posts.filter(post => parseInt(post.price) <= parseInt(rangeFilter.maxPrice))
         }
         if (rangeFilter.minArea){
             posts = posts.filter(post => post.rooms[0].area >= rangeFilter.minArea);
