@@ -19,3 +19,13 @@ exports.createReport = catchAsync( async(req, res, next) => {
         return next(new appError(400, 'please add a report details'));
     }
 });
+
+exports.getReports = catchAsync( async(req, res, next) => {
+    let reports = await Report.find({}).populate('postReported').populate('author');
+    res.status(200).json({
+        status: "success",
+        data: {
+            reports
+        }
+    })
+});

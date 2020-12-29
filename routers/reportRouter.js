@@ -6,19 +6,13 @@ const roomController =  require('../controllers/roomController');
 const reportController = require('../controllers/reportController');
 const userRouter = require('./userRouter');
 const postRouter = require('./postRouter');
-const reviewRouter = require('./reviewRouter');
-const reportRouter = require('./reportRouter');
 
 const router = express.Router({ mergeParams: true});
 
 router.use(userController.isLogin);
 
-router.use('/post', postRouter);
+router.get('/',userController.restrictedTo('admin'), reportController.getReports)
 
-router.use('/user', userRouter);
-
-router.use('/review', reviewRouter);
-
-router.use('/report', reportRouter);
+// router.get('/:id/authenticate-review',userController.restrictedTo('admin'), reviewController.authenticateReview);
 
 module.exports = router;
