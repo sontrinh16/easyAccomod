@@ -38,14 +38,7 @@ app.use(bodyParser.json());
 app.use(express.urlencoded({extended: true}));
 // app.use(upload.array()); 
 app.use(cookieParser());
-app.use(cors({credentials: true, origi: 'http://localhost:3000'}));
-
-const server = require('http').createServer(app);
-const io = require('socket.io')(server, {
-    cors: {
-        origin: 'http://localhost:3000'
-      }
-});
+app.use(cors());
 
 //ROUTERS
 //user routes
@@ -56,6 +49,8 @@ app.use('/api/post', postRouter);
 
 //admin routes
 app.use('/api/admin', adminRouter);
+
+app.use('/api/notification', )
 
 //invalid routes
 app.all('*', (req, res, next) => {

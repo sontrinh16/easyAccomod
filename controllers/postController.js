@@ -97,9 +97,9 @@ exports.createPost = catchAsync(async (req, res, next) => {
     });
 
     notification = await notification.save();
-    io.on('connection', (socket) => {
-        socket.emit("notification")
-    })
+    // io.on('connection', (socket) => {
+    //     socket.emit("notification")
+    // })
 
     res.status(200).json({
         status: "success",
