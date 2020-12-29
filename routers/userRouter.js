@@ -7,6 +7,8 @@ router.post('/register', userController.register);
 
 router.post('/login', userController.login);
 
+router.post('/login-facebook', userController.loginFacebook);
+
 router.use(userController.isLogin);
 
 router.get('/get-all-owner', userController.restrictedTo('admin'), userController.getAllOwner);

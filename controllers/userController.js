@@ -50,6 +50,58 @@ exports.register = catchAsync( async (req, res, next) => {
     }
 });
 
+exports.loginFacebook = catchAsync( async (req, res, next) => {
+    /*
+    *   TO DO: AXIOS CALL FACEBOOK
+    */
+    const { user_id, access_token } = req.body
+    const facebookData = await axios.get(`https://graph.facebook.com/v8.0/${user_id}?access_token=${access_token}&fields=id,name,email`)
+
+    const userData = {
+        email: facebookData.data.email,
+        firstName: facebookData.data.name.split(' ')[0],
+        lastName: facebookData.data.name.split(' ')[1],
+        isFacebookAccount: true
+    }
+
+    const findUser = await User.findOne({email: userData.email});
+    if ( findUser !== null ){
+        if (findUser.isFacebookAccount) {
+            const user = findUser
+            const token = generateToken(user._id);
+
+            return res.status(200).json({
+                status: "success",
+                data: {
+                    user,
+                    token
+                }
+            })
+        } else {
+            return next(new appError(400, 'Email has been used'));
+        }
+    }
+    else{
+        let user = new User(userData);
+
+        // default for renter
+        // no need to manually authenticate
+        user.authenticated = true;
+        user = await user.save();    
+
+        const token = generateToken(user._id);
+
+        return res.status(200).json({
+            status: "success",
+            data: {
+                user,
+                token
+            }
+        })
+    }
+});
+
+
 //user login
 exports.login = catchAsync( async(req, res, next) => {
     const user = await User.findOne({email: req.body.email});
