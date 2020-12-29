@@ -32,18 +32,20 @@ db.on('error', (err) => {
 
 //MIDDLEWARE
 const app = express();
-const server = require('http').createServer(app);
-const io = require('socket.io')(server, {
-    cors: {
-        origin: "*"
-      }
-});
+
 
 app.use(bodyParser.json());
 app.use(express.urlencoded({extended: true}));
 // app.use(upload.array()); 
 app.use(cookieParser());
 app.use(cors());
+
+const server = require('http').createServer(app);
+const io = require('socket.io')(server, {
+    cors: {
+        origin: "*"
+      }
+});
 
 //ROUTERS
 //user routes

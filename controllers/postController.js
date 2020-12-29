@@ -6,7 +6,8 @@ const User = require('../models/user');
 const Review = require('../models/review');
 const roomController = require('./../controllers/roomController');
 const getFilter = require('../utils/getFilter');
-const io = require('../app');
+const app = require('../app');
+const io = app.io;
 
 exports.getPosts = catchAsync(async (req, res, next) => {
     let posts = await Post.find({authenticate: true}).populate('author').populate('rooms');
