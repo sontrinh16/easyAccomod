@@ -6,6 +6,7 @@ const roomController =  require('../controllers/roomController');
 const reportController = require('../controllers/reportController');
 const userRouter = require('./userRouter');
 const postRouter = require('./postRouter');
+const reviewRouter = require('./reviewRouter');
 
 const router = express.Router({ mergeParams: true});
 
@@ -14,5 +15,7 @@ router.use(userController.isLogin);
 router.use('/post', postRouter);
 
 router.use('/user', userRouter);
+
+router.use('/review', reviewRouter);
 
 module.exports = router;

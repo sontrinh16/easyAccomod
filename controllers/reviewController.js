@@ -20,6 +20,16 @@ exports.createReview = catchAsync( async(req, res, next) => {
     }
 });
 
+exports.getReviews = catchAsync( async(req, res, next) => {
+    let reviews = await Review.find({});
+    res.status(200).json({
+        status: "success",
+        data: {
+            reviews
+        }
+    })
+});
+
 exports.authenticateReview = catchAsync( async(req, res, next) => {
     let review = await Review.findOneAndUpdate({_id : req.params.id}, {authenticate: true}, {new: true});
     res.status(200).json({

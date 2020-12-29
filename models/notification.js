@@ -5,6 +5,7 @@ const notiSchema = new Schema({
     postID: {type: Schema.Types.ObjectId, ref: 'Post'},
     created: {type: Date, default: Date.now},
     type:{type: String, enum:['review', 'post']},
+    seen:{type: Boolean}
 });
 
 const notitModel = mongoose.model('Notification', notiSchema);

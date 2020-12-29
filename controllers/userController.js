@@ -117,7 +117,7 @@ exports.getAllOwner = catchAsync(async(req, res, next) => {
         res.status(200).json({
             status: 'success',
             data: {
-                user
+                users
             }
         });
     }
@@ -127,7 +127,7 @@ exports.getAllOwner = catchAsync(async(req, res, next) => {
 });
 
 exports.authenticateOwner = catchAsync(async(req, res, next) => {
-    let user = await Post.findOneAndUpdate({_id: req.params.id}, {authenticated: true}, {
+    let user = await User.findOneAndUpdate({_id: req.params.id}, {authenticated: true}, {
         new: true
     });
     res.status(200).json({

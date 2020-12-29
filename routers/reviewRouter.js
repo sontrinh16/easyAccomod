@@ -9,8 +9,10 @@ const postRouter = require('./postRouter');
 
 const router = express.Router({ mergeParams: true});
 
+router.get('/', reviewController.getReviews)
+
 router.use(userController.isLogin);
 
-router.get('/:id/authenticate',userController.restrictedTo('admin'), reviewController.authenticateReview);
+router.get('/:id/authenticate-review',userController.restrictedTo('admin'), reviewController.authenticateReview);
 
 module.exports = router;
