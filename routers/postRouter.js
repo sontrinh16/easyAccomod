@@ -24,7 +24,9 @@ router.post('/get-user-post',userController.restrictedTo('owner','admin'), postC
 
 router.post('/new-post',userController.restrictedTo('owner','admin'), roomController.createRoom, postController.createPost);
 
-router.post('/:id/editPost',userController.restrictedTo('owner','admin'), postController.editPost);
+router.put('/:id/edit-post',userController.restrictedTo('owner','admin'), postController.editPost);
+
+router.put('/:id/edit-room',userController.restrictedTo('owner','admin'), roomController.editRoom);
 
 router.put('/:id/prolong-time-post',userController.restrictedTo('admin'), postController.prolongTimePost);
 
