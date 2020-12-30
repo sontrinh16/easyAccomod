@@ -1,6 +1,7 @@
 const catchAsync = require('./../utils/catchAsync');
 const appError = require('./../utils/appError');
 const Review = require('./../models/review');
+const Notification =  require('./../models/notification');
 
 exports.createReview = catchAsync( async(req, res, next) => {
     if (req.body){
@@ -9,6 +10,14 @@ exports.createReview = catchAsync( async(req, res, next) => {
         review.author = req.user._id;
         review = await review.save();
         req.review = review;
+
+        let noti = new Notification({
+            ID: review._id,
+            type: 'review'
+        });
+
+        noti = await noti.save();
+        
         res.status(200).json({
             status: 'success',
             data: {

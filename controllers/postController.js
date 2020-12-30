@@ -69,7 +69,7 @@ exports.getPost = catchAsync(async (req, res, next) => {
     if (post !== null)
     {
         delete post.authenticate;
-        let reviews = await Review.find({belongTo: req.params.id}).populate('author');
+        let reviews = await Review.find({belongTo: req.params.id, authenticate: true}).populate('author');
         res.status(200).json({
             status: "success",
             data: {
