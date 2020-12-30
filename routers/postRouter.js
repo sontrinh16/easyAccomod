@@ -32,7 +32,7 @@ router.put('/:id/edit-post',userController.restrictedTo('owner','admin'), postCo
 
 router.put('/:id/edit-room',userController.restrictedTo('owner','admin'), roomController.editRoom);
 
-router.put('/:id/prolong-time-post',userController.restrictedTo('admin'), postController.prolongTimePost);
+router.put('/:id/prolong-time-post',userController.restrictedTo('admin', 'owner'), postController.prolongTimePost);
 
 router.post('/:id/reportRoom',userController.restrictedTo('renter'), reportController.createReport);
 

@@ -7,6 +7,7 @@ const Review = require('../models/review');
 const Notification = require('../models/notification');
 const roomController = require('./../controllers/roomController');
 const getFilter = require('../utils/getFilter');
+const e = require('cors');
 
 
 exports.getPosts = catchAsync(async (req, res, next) => {
@@ -167,12 +168,23 @@ exports.searchPost = catchAsync(async (req, res, next) => {
 });
 
 exports.editPost = catchAsync(async (req, res, next) => {
-    let post = await Post.findOneAndUpdate({ _id: req.params.id }, req.body, {
-        new: true
-    });
-    res.status(200).json({
-        status: 'success'
-    });
+    let post = await Post.findOne({_id: req.params.id});
+    if(post){
+    if ( post.authenticate === true){
+        post = await Post.findOneAndUpdate({ _id: req.params.id }, req.body, {
+            new: true
+        });
+        res.status(200).json({
+            status: 'success'
+        }); 
+    }
+    else{
+        return next(new appError(400, 'Cannot edit authenticated post'));
+    }
+}
+else {
+    return next( new appError(404, 'Post not found'));
+}
 });
 
 exports.addFavorite = catchAsync(async (req, res, next) => {

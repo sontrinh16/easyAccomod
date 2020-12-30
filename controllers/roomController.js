@@ -25,10 +25,15 @@ exports.editRoom = catchAsync( async( req, res, next) => {
     let post = await Post.findOne({_id: req.params.id});
     console.log(req.body)
     if(post){
-        let room = await Room.findByIdAndUpdate({_id : post.rooms[0]._id}, req.body);
-        res.status(200).json({
-            status: "success"
-        })
+        if(post.authenticate === false){
+            let room = await Room.findByIdAndUpdate({_id : post.rooms[0]._id}, req.body);
+            res.status(200).json({
+                status: "success"
+            })
+        }
+        else{
+            return next( new appError(400, 'Cannot edit authenticated post'));
+        }
     }
     else{
         return next ( new appError(404, 'Post not found'));
