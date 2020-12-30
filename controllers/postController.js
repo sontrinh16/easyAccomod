@@ -230,7 +230,7 @@ exports.prolongTimePost = catchAsync(async (req, res, next) => {
     let post = await User.findOneAndUpdate({ _id: req.params.id }, {
         expiredAt: Date.parse(req.body.expiredAt),
         postPrice: req.body.postPrice
-    });
+    },{new: true});
     res.status(200).json({
         status: 'success'
     });
