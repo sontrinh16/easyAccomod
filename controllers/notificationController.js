@@ -17,10 +17,12 @@ exports.getNotifications = catchAsync(async(req, res, next) => {
 
 exports.seenNotification = catchAsync(async(req, res, next) => {
     let noti = await Notification.findOneAndUpdate({_id: req.params.id}, {seen: true}, {new: true});
+    let not_seen_noti = await Notification.find({seen: false});
     res.status(200).json({
         status: "success",
         data: {
-            noti
+            noti,
+            not_seen_noti: not_seen_noti.length
         }
     });
 })
