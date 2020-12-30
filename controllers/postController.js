@@ -240,13 +240,11 @@ exports.toggleActivePost = catchAsync(async (req, res, next) => {
     let post = await Post.findOne({_id: req.params.id});
     if(post){
         if(post.status === 'active'){
-            post.status = 'inactive';
+            post = await Post.findByIdAndUpdate({_id: post._id},{status: 'inactive'}, {new:true})
         }
         else {
-            post.status = 'active';
+            post = await Post.findByIdAndUpdate({_id: post._id},{status: 'active'}, {new:true})
         }
-        post = await post.save();
-
         res.status(200).json({
             status: 'success'
         });
