@@ -16,7 +16,7 @@ exports.getNotifications = catchAsync(async(req, res, next) => {
 });
 
 exports.seenNotification = catchAsync(async(req, res, next) => {
-    let noti = await Notification.findOneAndUpdate({_id: req.params.id}, {authenticate: true}, {new: true});
+    let noti = await Notification.findOneAndUpdate({_id: req.params.id}, {seen: true}, {new: true});
     res.status(200).json({
         status: "success",
         data: {
