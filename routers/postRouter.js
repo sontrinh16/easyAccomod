@@ -22,7 +22,7 @@ router.post('/search', postController.searchPost);
 
 router.use(userController.isLogin);
 
-router.get('/get-all-posts', userController.restrictedTo('admin'), postController.getAllPosts);
+router.post('/get-all-posts', userController.restrictedTo('admin'), postController.getAllPosts);
 
 router.post('/get-user-post',userController.restrictedTo('owner','admin'), postController.getUserPost);
 

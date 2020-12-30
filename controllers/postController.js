@@ -30,17 +30,12 @@ exports.getPosts = catchAsync(async (req, res, next) => {
 
 exports.getAllPosts = catchAsync(async (req, res, next) => {
     let posts = await Post.find({}).populate('author').populate('rooms');
-    if (posts.length !== 0){
         res.status(200).json({
             status: "success",
             data: {
                 posts
             }
         });
-    }
-    else {
-        return next(new appError(404, 'No posts found'));
-    }
 });
 
 exports.getUserPost = catchAsync(async (req, res, next) => {
@@ -140,6 +135,7 @@ exports.searchPost = catchAsync(async (req, res, next) => {
     if (req.body.services){
         roomFilter.services = req.body.services;
     }
+    postFilter.authenticate = true;
     console.log(roomFilter)
     let posts = await Post.find(postFilter).populate('author').populate('rooms');
     //let rooms = await Room.find(roomFilter);
