@@ -4,6 +4,7 @@ const User = require('./../models/user')
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const util = require('util');
+const axios =  require('axios');
 
 //Create json web token 
 const generateToken = (id) => {
