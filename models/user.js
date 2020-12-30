@@ -7,7 +7,7 @@ const userSchema = new Schema({
     firstName: {type: String, required: true, trim: true},
     lastName: {type: String, trim: true},
     isFacebookAccount: {type: Boolean, default: false},
-    role: {type: String, enum: ['admin', 'renter','owner']},
+    role: {type: String, enum: ['admin', 'renter','owner'], default: 'renter'},
     birthDay: {type: Date, default: null},
     phoneNumber: {type: String, default: null},
     socialID: {type: String, default: null},
