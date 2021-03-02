@@ -34,7 +34,7 @@ exports.getPosts = catchAsync(async (req, res, next) => {
         });
     }
     else {
-        let posts = await Post.find({authenticate: true}).populate('author').populate('rooms').select({
+        let posts = await Post.find({authenticate: true}).populate('author').populate('rooms').sort('-createdAt').select({
             _id: 0,
             authenticate: 0,
             __v: 0
@@ -72,7 +72,11 @@ exports.getAllPosts = catchAsync(async (req, res, next) => {
         });
     }
     else {
-        let posts = await Post.find({}).populate('author').populate('rooms');
+        let posts = await Post.find({}).populate('author').populate('rooms').sort('-createdAt').select({
+            _id: 0,
+            authenticate: 0,
+            __v: 0
+        });
             res.status(200).json({
                 status: "success",
                 data: {
