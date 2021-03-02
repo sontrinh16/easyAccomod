@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const mongoosePaginate = require('mongoose-paginate-v2');
+
 
 const postSchema = new Schema({
     author: {type: Schema.Types.ObjectId, ref: 'User'},
@@ -21,6 +23,8 @@ const postSchema = new Schema({
     //reported: [{type: Schema.Types.ObjectId, ref: 'Report', default: null}],
     images: [{type: String}]
 })
+
+postSchema.plugin(mongoosePaginate);
 
 const postModel = mongoose.model('Post', postSchema);
 

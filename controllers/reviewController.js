@@ -31,13 +31,40 @@ exports.createReview = catchAsync( async(req, res, next) => {
 });
 
 exports.getReviews = catchAsync( async(req, res, next) => {
-    let reviews = await Review.find({}).populate('belongTo').populate('author');
-    res.status(200).json({
+    if (req.query.limit||req.query.page){
+        const options = {
+            page: req.query.page,
+            limit: req.query.limit,
+            populate: ['author','belongTo'],
+            sort: {created : -1},
+            select: {
+                _id: 0,
+                authenticate: 0,
+                __v: 0
+            }
+        };
+        let docs = await Review.paginate({}, options);
+        let reviews = docs.docs
+        res.status(200).json({
+            status: "success",
+            data: {
+               reviews
+            }
+        });
+    }
+    else{
+        let reviews = await Review.find({}).populate('belongTo').populate('author').sort('-created').select({
+            _id: 0,
+            authenticate: 0,
+            __v: 0
+        });
+        res.status(200).json({
         status: "success",
         data: {
             reviews
         }
     })
+    }
 });
 
 exports.authenticateReview = catchAsync( async(req, res, next) => {

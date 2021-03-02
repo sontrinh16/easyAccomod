@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const mongoosePaginate = require('mongoose-paginate-v2');
 
 const userSchema = new Schema({
     email: {type: String, unique: true, required: true, trim: true},
@@ -15,6 +16,8 @@ const userSchema = new Schema({
     authenticated: {type: Boolean, default: false},
     favoriteRoom: [{type: Schema.Types.ObjectId, ref: 'Post', default: null}]
 });
+
+userSchema.plugin(mongoosePaginate);
 
 const userModel = mongoose.model('User', userSchema);
 

@@ -8,15 +8,24 @@ const Notification = require('../models/notification');
 const roomController = require('./../controllers/roomController');
 const getFilter = require('../utils/getFilter');
 const e = require('cors');
+const { collection } = require('../models/user');
 
 
 exports.getPosts = catchAsync(async (req, res, next) => {
-    let posts = await Post.find({authenticate: true}).populate('author').populate('rooms');
-    if (posts.length !== 0){
-        posts = posts.map(post => {
-            delete post.authenticate;
-            return post;
-        });
+    if (req.query.limit||req.query.page){
+        const options = {
+            page: req.query.page,
+            limit: req.query.limit,
+            populate: ['author','rooms'],
+            sort: {createdAt : -1},
+            select: {
+                _id: 0,
+                authenticate: 0,
+                __v: 0
+            }
+        };
+        let docs = await Post.paginate({authenticate: true}, options);
+        let posts = docs.docs
         res.status(200).json({
             status: "success",
             data: {
@@ -25,24 +34,36 @@ exports.getPosts = catchAsync(async (req, res, next) => {
         });
     }
     else {
-        return next(new appError(404, 'No posts found'));
+        let posts = await Post.find({authenticate: true}).populate('author').populate('rooms').select({
+            _id: 0,
+            authenticate: 0,
+            __v: 0
+        })
+        res.status(200).json({
+            status: "success",
+            data: {
+                posts
+            }
+        });
     }
+    
 });
 
 exports.getAllPosts = catchAsync(async (req, res, next) => {
-    let posts = await Post.find({}).populate('author').populate('rooms');
-        res.status(200).json({
-            status: "success",
-            data: {
-                posts
+    if (req.query.limit||req.query.page){
+        const options = {
+            page: req.query.page,
+            limit: req.query.limit,
+            populate: ['author','rooms'],
+            sort: {createdAt : -1},
+            select: {
+                _id: 0,
+                authenticate: 0,
+                __v: 0
             }
-        });
-});
-
-exports.getUserPost = catchAsync(async (req, res, next) => {
-    let posts = await Post.find({author: req.user._id}).populate('author').populate('rooms');
-    console.log(req.user);
-    if (posts.length !== 0){
+        };
+        let docs = await Post.paginate({}, options);
+        let posts = docs.docs
         res.status(200).json({
             status: "success",
             data: {
@@ -51,28 +72,97 @@ exports.getUserPost = catchAsync(async (req, res, next) => {
         });
     }
     else {
-        return next(new appError(404, 'No posts found'));
+        let posts = await Post.find({}).populate('author').populate('rooms');
+            res.status(200).json({
+                status: "success",
+                data: {
+                    posts
+                }
+            });
     }
 });
 
-exports.check = (req, res, next) => {
-    console.log(req.user);
-    return next();
-};
-
-exports.getPost = catchAsync(async (req, res, next) => {
-    let post = await Post.findOne({_id: req.params.id}).populate('author').populate('rooms');
-    if (post !== null)
-    {
-        delete post.authenticate;
-        let reviews = await Review.find({belongTo: req.params.id, authenticate: true}).populate('author');
+exports.getUserPost = catchAsync(async (req, res, next) => {
+    if (req.query.limit||req.query.page){
+        const options = {
+            page: req.query.page,
+            limit: req.query.limit,
+            populate: ['author','rooms'],
+            sort: {createdAt : -1},
+            select: {
+                _id: 0,
+                authenticate: 0,
+                __v: 0
+            }
+        };
+        let docs = await Post.paginate({author: req.user._id}, options);
+        let posts = docs.docs
         res.status(200).json({
             status: "success",
             data: {
-                post,
-                reviews
+                posts
             }
         });
+    }
+    else {
+        let posts = await Post.find({author: req.user._id}).populate('author').populate('rooms').sort('-createdAt').select({
+            _id: 0,
+            authenticate: 0,
+            __v: 0
+        })
+        res.status(200).json({
+            status: "success",
+            data: {
+                posts
+            }
+        });
+    }
+});
+
+exports.getPost = catchAsync(async (req, res, next) => {
+    let post = await Post.findOne({_id: req.params.id}).populate('author').populate('rooms').sort('-createdAt').select({
+        _id: 0,
+        authenticate: 0,
+        __v: 0
+    });
+    if (post !== null)
+    {
+        if (req.query.limit||req.query.page){
+            const options = {
+                page: req.query.page,
+                limit: req.query.limit,
+                populate: ['author'],
+                sort: {created : -1},
+                select: {
+                    _id: 0,
+                    authenticate: 0,
+                    __v: 0
+                }
+            };
+            let docs = await Review.paginate({belongTo: req.params.id, authenticate: true}, options);
+            let reviews = docs.docs;
+            res.status(200).json({
+                status: "success",
+                data: {
+                    post,
+                    reviews
+                }
+            });
+        }
+        else{
+            let reviews = await Review.find({belongTo: req.params.id, authenticate: true}).populate('author').sort('-created').select({
+                _id: 0,
+                authenticate: 0,
+                __v: 0
+            });;
+            res.status(200).json({
+                status: "success",
+                data: {
+                    post,
+                    reviews
+                }
+            });
+        }
     }
     else {
         return next(new appError(404, 'Post not found!'));
@@ -93,9 +183,6 @@ exports.createPost = catchAsync(async (req, res, next) => {
     });
 
     notification = await notification.save();
-    // io.on('connection', (socket) => {
-    //     socket.emit("notification")
-    // })
 
     res.status(200).json({
         status: "success",
@@ -128,18 +215,19 @@ exports.searchPost = catchAsync(async (req, res, next) => {
     if (req.body.minArea){
         rangeFilter.minArea = req.body.minArea; 
     }
-    //console.log(postFilter)
     if (req.body.maxArea){
         rangeFilter.maxArea = req.body.maxArea;
     }
-    //console.log(rangeFilter)
     if (req.body.services){
         roomFilter.services = req.body.services;
     }
     postFilter.authenticate = true;
-    console.log(roomFilter)
-    let posts = await Post.find(postFilter).populate('author').populate('rooms');
-    //let rooms = await Room.find(roomFilter);
+    
+    let posts = await Post.find(postFilter).populate('author').populate('rooms').sort('-createdAt').select({
+        _id: 0,
+        authenticate: 0,
+        __v: 0
+    });
     if (rangeFilter){
         if(rangeFilter.minPrice){
             posts = posts.filter(post => parseInt(post.rooms[0].price) >= parseInt(rangeFilter.minPrice));

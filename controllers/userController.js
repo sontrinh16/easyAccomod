@@ -22,8 +22,8 @@ exports.register = catchAsync( async (req, res, next) => {
     else{
         const hash = await bcrypt.hash(req.body.password, 10);
         let user = new User(req.body);
+        console.log(user)
         user.password = hash;
-        user.password_confirm = hash;
         if (user.role === 'renter') {
             user.authenticated = true;
         }
@@ -150,7 +150,13 @@ exports.isLogin = catchAsync( async(req, res, next) => {
 });
 
 exports.getUser = catchAsync( async(req, res, next) => {
-    let user = await User.findOne({_id: req.params.id}).populate('favoriteRoom');
+    let user = await User.findOne({_id: req.params.id}).populate('favoriteRoom').select({
+        _id: 0,
+        password: 0,
+        __v:0,
+        isFacebookAccount: 0,
+        authenticated: 0
+    });;
     if(user){
         res.status(200).json({
             status: 'success',
@@ -165,8 +171,37 @@ exports.getUser = catchAsync( async(req, res, next) => {
 });
 
 exports.getAllOwner = catchAsync(async(req, res, next) => {
-    let users = await User.find({}).populate('favoriteRoom');
-    if (users){
+    if (req.query.limit||req.query.page){
+        const options = {
+            page: req.query.page,
+            limit: req.query.limit,
+            populate: ['favoriteRoom'],
+            sort: {firstName : 1},
+            select: {
+                _id: 0,
+                password: 0,
+                __v:0,
+                isFacebookAccount: 0,
+                authenticated: 0
+            }
+        };
+        let docs = await User.paginate({}, options);
+        let users = docs.docs
+        res.status(200).json({
+            status: "success",
+            data: {
+                users
+            }
+        });
+    }
+    else{
+        let users = await User.find({}).populate('favoriteRoom').sort('firstName').select({
+            _id: 0,
+            password: 0,
+            __v:0,
+            isFacebookAccount: 0,
+            authenticated: 0
+        });
         res.status(200).json({
             status: 'success',
             data: {
@@ -174,11 +209,10 @@ exports.getAllOwner = catchAsync(async(req, res, next) => {
             }
         });
     }
-    else{
-        return next(new appError(404, 'No user found'));
-    }
 });
 
+
+//admin authenticate owner function
 exports.authenticateOwner = catchAsync(async(req, res, next) => {
     let user = await User.findOneAndUpdate({_id: req.params.id}, {authenticated: true}, {
         new: true
@@ -188,6 +222,7 @@ exports.authenticateOwner = catchAsync(async(req, res, next) => {
     });
 });
 
+//user role restriction
 exports.restrictedTo = (...roles) => {
     return (req, res, next) => {
       if (!roles.includes(req.user.role)) {

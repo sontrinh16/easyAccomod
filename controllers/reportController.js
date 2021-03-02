@@ -21,11 +21,36 @@ exports.createReport = catchAsync( async(req, res, next) => {
 });
 
 exports.getReports = catchAsync( async(req, res, next) => {
-    let reports = await Report.find({}).populate('postReported').populate('author');
-    res.status(200).json({
-        status: "success",
-        data: {
-            reports
-        }
-    })
+    if (req.query.limit||req.query.page){
+        const options = {
+            page: req.query.page,
+            limit: req.query.limit,
+            populate: ['postReported','author'],
+            sort: {createdTime : -1},
+            select: {
+                _id: 0,
+                __v: 0
+            }
+        };
+        let docs = await Report.paginate({}, options);
+        let reports = docs.docs
+        res.status(200).json({
+            status: "success",
+            data: {
+                reports
+            }
+        });
+    }
+    else{
+        let reports = await Report.find({}).populate('postReported').populate('author').sort('-createdTime').select({
+            _id: 0,
+            __v: 0
+        });
+        res.status(200).json({
+            status: "success",
+            data: {
+                reports
+            }
+        })
+    }
 });

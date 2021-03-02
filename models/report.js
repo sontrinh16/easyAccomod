@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const mongoosePaginate = require('mongoose-paginate-v2');
+
 
 const reportSchema = new Schema({
     type: [{type: String, required: true}],
@@ -9,6 +11,8 @@ const reportSchema = new Schema({
     resolved: {type: Boolean, default: false},
     postReported: {type: Schema.Types.ObjectId, ref: 'Post'}
 })
+
+reportSchema.plugin(mongoosePaginate);
 
 const reportModel = mongoose.model('Report', reportSchema);
 

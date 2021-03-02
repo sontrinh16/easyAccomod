@@ -20,6 +20,8 @@ router.get('/',postController.getPosts);
 
 router.post('/search', postController.searchPost);
 
+
+//NEED LOGIN IN
 router.use(userController.isLogin);
 
 router.post('/get-all-posts', userController.restrictedTo('admin'), postController.getAllPosts);
@@ -54,7 +56,7 @@ router.post('/:id/upload-image',upload.single('image') , async (req, res, next) 
             let data = new FormData();
             data.append('image', req.file.buffer.toString('base64'));
             data.append('type','base64')
-            console.log(data)
+            //console.log(data)
             const imgurData = await axios.post(
                 'https://api.imgur.com/3/image',
                 data,
@@ -66,7 +68,7 @@ router.post('/:id/upload-image',upload.single('image') , async (req, res, next) 
                     }
                 }
             ) 
-            console.log(imgurData.data.data.link);
+            //console.log(imgurData.data.data.link);
             let links = post.images;
             links.push(imgurData.data.data.link);
             post = await Post.findByIdAndUpdate({_id: post._id}, {images: links},{new: true});
@@ -82,7 +84,7 @@ router.post('/:id/upload-image',upload.single('image') , async (req, res, next) 
         }
     }
     catch(err){
-        console.log(err.response ? err.response.data.data : err);
+        //console.log(err.response ? err.response.data.data : err);
         return next(err);
     }
 })
