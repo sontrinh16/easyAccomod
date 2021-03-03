@@ -10,7 +10,7 @@ exports.getNotifications = catchAsync(async(req, res, next) => {
             limit: req.query.limit,
             sort: {created : -1},
             select: {
-                _id: 0,
+                
                 __v: 0
             }
         };
@@ -27,7 +27,7 @@ exports.getNotifications = catchAsync(async(req, res, next) => {
     }
     else{
         let noti = await Notification.find({}).sort('-created').select({
-            _id: 0,
+            
             __v: 0
         });
         let not_seen_noti = await Notification.find({seen: false});
