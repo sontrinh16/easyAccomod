@@ -12,6 +12,7 @@ const adminRouter = require('./routers/adminRouter');
 const notificationRouter = require('./routers/notiRouter');
 const appError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorHandler');
+const pusher = require('./utils/pusher');
 
 dotenv.config({path: path.join(__dirname, 'config.env')})
 
@@ -48,6 +49,12 @@ app.use('/api/post', postRouter);
 app.use('/api/admin', adminRouter);
 
 app.use('/api/notification', notificationRouter);
+
+app.get('/test', () => {
+    pusher.trigger("admin-notification", "new-post", {
+        message: "hello world"
+    });
+})
 
 //invalid routes
 app.all('*', (req, res, next) => {
