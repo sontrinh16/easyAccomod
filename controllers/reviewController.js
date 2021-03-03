@@ -77,12 +77,13 @@ exports.authenticateReview = catchAsync( async(req, res, next) => {
 
     let notification = new Notification({
         ID: post._id,
-        type: 'review'
+        type: 'review',
+        belongTo: review.author._id
     });
     notification = await notification.save();
-    let not_seen_noti = await Notification.find({seen: false});
+    let not_seen_noti = await Notification.find({belongTo: review.author._id, seen: false});
 
-    pusher.trigger(`user-${post.author._id}`, 'review-authenticated', {
+    pusher.trigger(`user-${review.author._id}`, 'review-authenticated', {
         data: {
             review,
             notification,

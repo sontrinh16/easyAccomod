@@ -359,10 +359,11 @@ exports.authenticatePost = catchAsync(async(req, res, next) => {
 
     let notification = new Notification({
         ID: post._id,
-        type: 'post'
+        type: 'post',
+        belongTo: post.author._id
     });
     notification = await notification.save();
-    let not_seen_noti = await Notification.find({seen: false});
+    let not_seen_noti = await Notification.find({belongTo: post.author._id, seen: false});
 
     pusher.trigger(`user-${post.author._id}`, 'post-authenticated', {
         data: {
