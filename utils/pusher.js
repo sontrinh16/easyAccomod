@@ -1,10 +1,14 @@
 const Pusher = require("pusher");
+const dotenv = require('dotenv');
+const path = require('path');
+
+dotenv.config({path: path.join(__dirname, '..', 'config.env')})
 
 const pusher = new Pusher({
-  appId: '1165166',
-  key: '7d2ff12889bbde94065e',
-  secret: 'bacf1c8fa38abbd34e16',
-  cluster: 'ap3',
+  appId: process.env.APP_ID,
+  key: process.env.KEY,
+  secret: process.env.SECRET,
+  cluster: process.env.CLUSTER,
   port: 443,
   useTLS: true
 });

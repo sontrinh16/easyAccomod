@@ -14,7 +14,7 @@ const appError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorHandler');
 const pusher = require('./utils/pusher');
 
-dotenv.config({path: path.join(__dirname, 'config.env')})
+dotenv.config({path: path.join(__dirname, 'config.env')});
 
 // MONGODB CONNECT
 const db = mongoose.connection;
@@ -50,14 +50,15 @@ app.use('/api/admin', adminRouter);
 
 app.use('/api/notification', notificationRouter);
 
-app.get('/test', (req, res) => {
-    pusher.trigger('admin-notification', 'new-post', {
-        message: 'hello world'
-    });
-    res.json({
-        status: 'success'
-    });
-})
+// app.get('/test', (req, res) => {
+//     console.log(pusher)
+//     pusher.trigger('admin-notification', 'new-post', {
+//         message: 'hello world'
+//     });
+//     res.json({
+//         status: 'success'
+//     });
+// })
 
 //invalid routes
 app.all('*', (req, res, next) => {
