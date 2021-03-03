@@ -50,11 +50,13 @@ app.use('/api/admin', adminRouter);
 
 app.use('/api/notification', notificationRouter);
 
-app.get('/test', () => {
-    pusher.trigger("admin-notification", "new-post", {
-        message: "hello world"
+app.get('/test', (req, res) => {
+    pusher.trigger('admin-notification', 'new-post', {
+        message: 'hello world'
     });
-    res.send('');
+    res.json({
+        status: 'success'
+    });
 })
 
 //invalid routes
