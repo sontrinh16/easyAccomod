@@ -7,8 +7,7 @@ const Review = require('../models/review');
 const Notification = require('../models/notification');
 const roomController = require('./../controllers/roomController');
 const getFilter = require('../utils/getFilter');
-const e = require('cors');
-const { collection } = require('../models/user');
+const pusher = require('./../utils/pusher');
 
 
 exports.getPosts = catchAsync(async (req, res, next) => {
@@ -185,8 +184,15 @@ exports.createPost = catchAsync(async (req, res, next) => {
         ID: post._id,
         type: 'post'
     });
-
     notification = await notification.save();
+    let not_seen_noti = await Notification.find({seen: false});
+
+    pusher.trigger('admin-notification', 'new-post', {
+        data: {
+            notification,
+            not_seen_noti: not_seen_noti.length
+        }
+    });
 
     res.status(200).json({
         status: "success",
@@ -350,6 +356,22 @@ exports.authenticatePost = catchAsync(async(req, res, next) => {
     let post = await Post.findOneAndUpdate({_id: req.params.id}, {authenticate: true}, {
         new: true
     });
+
+    let notification = new Notification({
+        ID: post._id,
+        type: 'post'
+    });
+    notification = await notification.save();
+    let not_seen_noti = await Notification.find({seen: false});
+
+    pusher.trigger(`user-${post.author._id}`, 'post-authenticated', {
+        data: {
+            post,
+            notification,
+            not_seen_noti: not_seen_noti.length
+        }
+    });
+
     res.status(200).json({
         status: 'success'
     });

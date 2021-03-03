@@ -69,6 +69,22 @@ exports.getReviews = catchAsync( async(req, res, next) => {
 
 exports.authenticateReview = catchAsync( async(req, res, next) => {
     let review = await Review.findOneAndUpdate({_id : req.params.id}, {authenticate: true}, {new: true});
+
+    let notification = new Notification({
+        ID: post._id,
+        type: 'review'
+    });
+    notification = await notification.save();
+    let not_seen_noti = await Notification.find({seen: false});
+
+    pusher.trigger(`user-${post.author._id}`, 'post-authenticated', {
+        data: {
+            review,
+            notification,
+            not_seen_noti: not_seen_noti.length
+        }
+    });
+
     res.status(200).json({
         status: 'success',
     });
