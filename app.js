@@ -54,6 +54,7 @@ app.get('/test', () => {
     pusher.trigger("admin-notification", "new-post", {
         message: "hello world"
     });
+    res.send('');
 })
 
 //invalid routes
