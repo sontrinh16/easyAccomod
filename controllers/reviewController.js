@@ -11,12 +11,20 @@ exports.createReview = catchAsync( async(req, res, next) => {
         review = await review.save();
         req.review = review;
 
-        let noti = new Notification({
+        let notification = new Notification({
             ID: review._id,
             type: 'review'
         });
 
-        noti = await noti.save();
+        notification = await notification.save();
+        let not_seen_noti = await Notification.find({seen: false});
+
+        pusher.trigger(`admin-notification`, 'new-review', {
+            data: {
+                notification,
+                not_seen_noti: not_seen_noti.length
+            }
+        });
         
         res.status(200).json({
             status: 'success',
@@ -77,7 +85,7 @@ exports.authenticateReview = catchAsync( async(req, res, next) => {
     notification = await notification.save();
     let not_seen_noti = await Notification.find({seen: false});
 
-    pusher.trigger(`user-${post.author._id}`, 'post-authenticated', {
+    pusher.trigger(`user-${post.author._id}`, 'review-authenticated', {
         data: {
             review,
             notification,

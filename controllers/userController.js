@@ -65,6 +65,8 @@ exports.loginFacebook = catchAsync( async (req, res, next) => {
         isFacebookAccount: true
     }
 
+    console.log(userData)
+
     const findUser = await User.findOne({email: userData.email});
     if ( findUser !== null ){
         if (findUser.isFacebookAccount) {
