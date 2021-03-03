@@ -52,3 +52,40 @@ exports.seenNotification = catchAsync(async(req, res, next) => {
         }
     });
 })
+
+exports.seenAllNotification = catchAsync(async(req, res, next) => {
+    await Notification.updateMany({seen: false}, {seen: true});
+    if (req.query.limit||req.query.page){
+        const options = {
+            page: req.query.page,
+            limit: req.query.limit,
+            sort: {created : -1},
+            select: {
+                _id: 0,
+                __v: 0
+            }
+        };
+        let docs = await Notification.paginate({}, options);
+        let notifications = docs.docs;
+        res.status(200).json({
+            status: "success",
+            data: {
+                notifications,
+                not_seen_noti: 0
+            }
+        });
+    }
+    else{
+        let noti = await Notification.find({}).sort('-created').select({
+            _id: 0,
+            __v: 0
+        });
+        res.status(200).json({
+            status: "success",
+            data: {
+                noti,
+                not_seen_noti: 0
+            }
+        })
+    }
+})

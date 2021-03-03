@@ -16,6 +16,8 @@ router.get('/', userController.restrictedTo('owner','admin'), notificationContro
 
 router.get('/:id', userController.restrictedTo('owner','admin'), notificationController.seenNotification);
 
+router.post('/read-all', userController.restrictedTo('owner','admin'), notificationController.seenAllNotification);
+
 //router.use(userController.isLogin);
 
 //router.get('/:id/authenticate-review',userController.restrictedTo('admin'), reviewController.authenticateReview);
