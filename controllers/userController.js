@@ -111,6 +111,9 @@ exports.login = catchAsync( async(req, res, next) => {
     if (user === null){
         return next(400, 'Email or Password are incorrect');
     }
+    else if(user.role === 'owner' && user.authenticated === false){
+        return next(new appError(401, 'Account not yet been authenticated'));
+    }
     else {
         const match = await bcrypt.compare(req.body.password, user.password);
         if (match === true) {
