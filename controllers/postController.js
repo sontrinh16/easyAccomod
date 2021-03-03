@@ -19,7 +19,7 @@ exports.getPosts = catchAsync(async (req, res, next) => {
             sort: {createdAt : -1},
             select: {
                 
-                authenticate: 0,
+                
                 __v: 0
             }
         };
@@ -35,7 +35,7 @@ exports.getPosts = catchAsync(async (req, res, next) => {
     else {
         let posts = await Post.find({authenticate: true}).populate('author').populate('rooms').sort('-createdAt').select({
             
-            authenticate: 0,
+            
             __v: 0
         })
         res.status(200).json({
@@ -57,7 +57,7 @@ exports.getAllPosts = catchAsync(async (req, res, next) => {
             sort: {createdAt : -1},
             select: {
                 
-                authenticate: 0,
+                
                 __v: 0
             }
         };
@@ -73,7 +73,7 @@ exports.getAllPosts = catchAsync(async (req, res, next) => {
     else {
         let posts = await Post.find({}).populate('author').populate('rooms').sort('-createdAt').select({
             
-            authenticate: 0,
+            
             __v: 0
         });
             res.status(200).json({
@@ -94,7 +94,7 @@ exports.getUserPost = catchAsync(async (req, res, next) => {
             sort: {createdAt : -1},
             select: {
                 
-                authenticate: 0,
+                
                 __v: 0
             }
         };
@@ -110,7 +110,7 @@ exports.getUserPost = catchAsync(async (req, res, next) => {
     else {
         let posts = await Post.find({author: req.user._id}).populate('author').populate('rooms').sort('-createdAt').select({
             
-            authenticate: 0,
+            
             __v: 0
         })
         res.status(200).json({
@@ -125,7 +125,7 @@ exports.getUserPost = catchAsync(async (req, res, next) => {
 exports.getPost = catchAsync(async (req, res, next) => {
     let post = await Post.findOne({_id: req.params.id}).populate('author').populate('rooms').sort('-createdAt').select({
         
-        authenticate: 0,
+        
         __v: 0
     });
     if (post !== null)
@@ -138,7 +138,7 @@ exports.getPost = catchAsync(async (req, res, next) => {
                 sort: {created : -1},
                 select: {
                     
-                    authenticate: 0,
+                    
                     __v: 0
                 }
             };
@@ -155,7 +155,7 @@ exports.getPost = catchAsync(async (req, res, next) => {
         else{
             let reviews = await Review.find({belongTo: req.params.id, authenticate: true}).populate('author').sort('-created').select({
                 
-                authenticate: 0,
+                
                 __v: 0
             });;
             res.status(200).json({
@@ -235,7 +235,7 @@ exports.searchPost = catchAsync(async (req, res, next) => {
     
     let posts = await Post.find(postFilter).populate('author').populate('rooms').sort('-createdAt').select({
         
-        authenticate: 0,
+        
         __v: 0
     });
     if (rangeFilter){

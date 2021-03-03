@@ -28,7 +28,7 @@ exports.getReports = catchAsync( async(req, res, next) => {
             populate: ['postReported','author'],
             sort: {createdTime : -1},
             select: {
-                _id: 0,
+                
                 __v: 0
             }
         };
@@ -43,7 +43,7 @@ exports.getReports = catchAsync( async(req, res, next) => {
     }
     else{
         let reports = await Report.find({}).populate('postReported').populate('author').sort('-createdTime').select({
-            _id: 0,
+            
             __v: 0
         });
         res.status(200).json({

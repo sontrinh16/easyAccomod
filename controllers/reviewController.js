@@ -60,8 +60,7 @@ exports.getReviews = catchAsync( async(req, res, next) => {
     }
     else{
         let reviews = await Review.find({}).populate('belongTo').populate('author').sort('-created').select({
-            _id: 0,
-            authenticate: 0,
+            
             __v: 0
         });
         res.status(200).json({

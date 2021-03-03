@@ -155,8 +155,8 @@ exports.getUser = catchAsync( async(req, res, next) => {
     let user = await User.findOne({_id: req.params.id}).populate('favoriteRoom').select({
         password: 0,
         __v:0,
-        isFacebookAccount: 0,
-        authenticated: 0
+        
+        
     });;
     if(user){
         res.status(200).json({
@@ -181,8 +181,8 @@ exports.getAllOwner = catchAsync(async(req, res, next) => {
             select: {
                 password: 0,
                 __v:0,
-                isFacebookAccount: 0,
-                authenticated: 0
+                
+                
             }
         };
         let docs = await User.paginate({}, options);
@@ -196,11 +196,11 @@ exports.getAllOwner = catchAsync(async(req, res, next) => {
     }
     else{
         let users = await User.find({}).populate('favoriteRoom').sort('firstName').select({
-            _id: 0,
+            
             password: 0,
             __v:0,
-            isFacebookAccount: 0,
-            authenticated: 0
+            
+            
         });
         res.status(200).json({
             status: 'success',
