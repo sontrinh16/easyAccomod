@@ -46,8 +46,6 @@ exports.getReviews = catchAsync( async(req, res, next) => {
             populate: ['author','belongTo'],
             sort: {created : -1},
             select: {
-                _id: 0,
-                authenticate: 0,
                 __v: 0
             }
         };

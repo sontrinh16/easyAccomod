@@ -153,7 +153,6 @@ exports.isLogin = catchAsync( async(req, res, next) => {
 
 exports.getUser = catchAsync( async(req, res, next) => {
     let user = await User.findOne({_id: req.params.id}).populate('favoriteRoom').select({
-        _id: 0,
         password: 0,
         __v:0,
         isFacebookAccount: 0,
@@ -180,7 +179,6 @@ exports.getAllOwner = catchAsync(async(req, res, next) => {
             populate: ['favoriteRoom'],
             sort: {firstName : 1},
             select: {
-                _id: 0,
                 password: 0,
                 __v:0,
                 isFacebookAccount: 0,

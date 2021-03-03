@@ -18,7 +18,7 @@ exports.getPosts = catchAsync(async (req, res, next) => {
             populate: ['author','rooms'],
             sort: {createdAt : -1},
             select: {
-                _id: 0,
+                
                 authenticate: 0,
                 __v: 0
             }
@@ -34,7 +34,7 @@ exports.getPosts = catchAsync(async (req, res, next) => {
     }
     else {
         let posts = await Post.find({authenticate: true}).populate('author').populate('rooms').sort('-createdAt').select({
-            _id: 0,
+            
             authenticate: 0,
             __v: 0
         })
@@ -56,7 +56,7 @@ exports.getAllPosts = catchAsync(async (req, res, next) => {
             populate: ['author','rooms'],
             sort: {createdAt : -1},
             select: {
-                _id: 0,
+                
                 authenticate: 0,
                 __v: 0
             }
@@ -72,7 +72,7 @@ exports.getAllPosts = catchAsync(async (req, res, next) => {
     }
     else {
         let posts = await Post.find({}).populate('author').populate('rooms').sort('-createdAt').select({
-            _id: 0,
+            
             authenticate: 0,
             __v: 0
         });
@@ -93,7 +93,7 @@ exports.getUserPost = catchAsync(async (req, res, next) => {
             populate: ['author','rooms'],
             sort: {createdAt : -1},
             select: {
-                _id: 0,
+                
                 authenticate: 0,
                 __v: 0
             }
@@ -109,7 +109,7 @@ exports.getUserPost = catchAsync(async (req, res, next) => {
     }
     else {
         let posts = await Post.find({author: req.user._id}).populate('author').populate('rooms').sort('-createdAt').select({
-            _id: 0,
+            
             authenticate: 0,
             __v: 0
         })
@@ -124,7 +124,7 @@ exports.getUserPost = catchAsync(async (req, res, next) => {
 
 exports.getPost = catchAsync(async (req, res, next) => {
     let post = await Post.findOne({_id: req.params.id}).populate('author').populate('rooms').sort('-createdAt').select({
-        _id: 0,
+        
         authenticate: 0,
         __v: 0
     });
@@ -137,7 +137,7 @@ exports.getPost = catchAsync(async (req, res, next) => {
                 populate: ['author'],
                 sort: {created : -1},
                 select: {
-                    _id: 0,
+                    
                     authenticate: 0,
                     __v: 0
                 }
@@ -154,7 +154,7 @@ exports.getPost = catchAsync(async (req, res, next) => {
         }
         else{
             let reviews = await Review.find({belongTo: req.params.id, authenticate: true}).populate('author').sort('-created').select({
-                _id: 0,
+                
                 authenticate: 0,
                 __v: 0
             });;
@@ -234,7 +234,7 @@ exports.searchPost = catchAsync(async (req, res, next) => {
     postFilter.authenticate = true;
     
     let posts = await Post.find(postFilter).populate('author').populate('rooms').sort('-createdAt').select({
-        _id: 0,
+        
         authenticate: 0,
         __v: 0
     });
