@@ -2,6 +2,7 @@ const catchAsync = require('./../utils/catchAsync');
 const appError = require('./../utils/appError');
 const Review = require('./../models/review');
 const Notification =  require('./../models/notification');
+const pusher = require('./../utils/pusher');
 
 exports.createReview = catchAsync( async(req, res, next) => {
     if (req.body){
@@ -74,16 +75,15 @@ exports.getReviews = catchAsync( async(req, res, next) => {
 
 exports.authenticateReview = catchAsync( async(req, res, next) => {
     let review = await Review.findOneAndUpdate({_id : req.params.id}, {authenticate: true}, {new: true});
-
     let notification = new Notification({
-        ID: post._id,
+        ID: review._id,
         type: 'review',
-        belongTo: review.author._id
+        belongTo: review.author
     });
     notification = await notification.save();
-    let not_seen_noti = await Notification.find({belongTo: review.author._id, seen: false});
+    let not_seen_noti = await Notification.find({belongTo: review.author, seen: false});
 
-    pusher.trigger(`user-${review.author._id}`, 'review-authenticated', {
+    pusher.trigger(`user-${review.author}`, 'review-authenticated', {
         data: {
             review,
             notification,

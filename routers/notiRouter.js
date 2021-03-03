@@ -12,13 +12,13 @@ const router = express.Router({ mergeParams: true});
 
 router.use(userController.isLogin);
 
-router.get('/', userController.restrictedTo('owner','admin'), notificationController.getNotifications);
+router.get('/', userController.restrictedTo('renter','owner','admin'), notificationController.getNotifications);
 
 router.get('/get-all-notification', userController.restrictedTo('admin'), notificationController.getAllNotifications);
 
-router.get('/:id', userController.restrictedTo('owner','admin'), notificationController.seenNotification);
+router.get('/:id', userController.restrictedTo('renter','owner','admin'), notificationController.seenNotification);
 
-router.post('/read-all', userController.restrictedTo('owner','admin'), notificationController.seenAllNotification);
+router.post('/read-all', userController.restrictedTo('renter','owner','admin'), notificationController.seenAllNotification);
 
 //router.use(userController.isLogin);
 
