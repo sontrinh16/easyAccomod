@@ -14,9 +14,9 @@ exports.getAllNotifications = catchAsync(async(req, res, next) => {
                 __v: 0
             }
         };
-        let docs = await Notification.paginate({}, options);
+        let docs = await Notification.paginate({adminOnly: true}, options);
         let notifications = docs.docs;
-        let not_seen_noti = await Notification.find({seen: false});
+        let not_seen_noti = await Notification.find({adminOnly: true, seen: false});
         res.status(200).json({
             status: "success",
             data: {
@@ -30,7 +30,7 @@ exports.getAllNotifications = catchAsync(async(req, res, next) => {
             
             __v: 0
         });
-        let not_seen_noti = await Notification.find({seen: false});
+        let not_seen_noti = await Notification.find({adminOnly: true, seen: false});
         res.status(200).json({
             status: "success",
             data: {

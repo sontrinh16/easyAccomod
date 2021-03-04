@@ -182,7 +182,8 @@ exports.createPost = catchAsync(async (req, res, next) => {
 
     let notification = new Notification({
         ID: post._id,
-        type: 'post'
+        type: 'post',
+        adminOnly: true
     });
     notification = await notification.save();
     let not_seen_noti = await Notification.find({seen: false});
