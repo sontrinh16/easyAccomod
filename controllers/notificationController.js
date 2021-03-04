@@ -52,9 +52,9 @@ exports.getNotifications = catchAsync(async(req, res, next) => {
                 __v: 0
             }
         };
-        let docs = await Notification.paginate({belongTo: req.user._id}, options);
+        let docs = await Notification.paginate({belongTo: req.user._id, adminOnly: false}, options);
         let notifications = docs.docs;
-        let not_seen_noti = await Notification.find({belongTo: req.user._id, seen: false});
+        let not_seen_noti = await Notification.find({belongTo: req.user._id, adminOnly: false, seen: false});
         res.status(200).json({
             status: "success",
             data: {

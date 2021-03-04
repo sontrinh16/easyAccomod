@@ -186,7 +186,7 @@ exports.createPost = catchAsync(async (req, res, next) => {
         adminOnly: true
     });
     notification = await notification.save();
-    let not_seen_noti = await Notification.find({seen: false});
+    let not_seen_noti = await Notification.find({adminOnly: true, seen: false});
 
     pusher.trigger('admin-notification', 'new-post', {
         data: {
@@ -354,27 +354,32 @@ exports.toggleActivePost = catchAsync(async (req, res, next) => {
 });
 
 exports.authenticatePost = catchAsync(async(req, res, next) => {
-    let post = await Post.findOneAndUpdate({_id: req.params.id}, {authenticate: true}, {
-        new: true
-    });
+    let post = await Post.findOne({_id: req.params.id}).populate('author');
+    if (post.authenticate !== true){
+        await Post.updateOne({_id : req.params.id}, {authenticate: true});
+        let notification = new Notification({
+            ID: post._id,
+            type: 'post',
+            belongTo: post.author._id
+        });
+        notification = await notification.save();
+        let not_seen_noti = await Notification.find({belongTo: post.author, seen: false});
 
-    let notification = new Notification({
-        ID: post._id,
-        type: 'post',
-        belongTo: post.author
-    });
-    notification = await notification.save();
-    let not_seen_noti = await Notification.find({belongTo: post.author, seen: false});
+        const channel = `user-${post.author._id}`;
 
-    pusher.trigger(`user-${post.author}`, 'post-authenticated', {
-        data: {
-            post,
-            notification,
-            not_seen_noti: not_seen_noti.length
-        }
-    });
+        pusher.trigger(channel, 'post-authenticated', {
+            data: {
+                post,
+                notification,
+                not_seen_noti: not_seen_noti.length
+            }
+        });
 
-    res.status(200).json({
-        status: 'success'
-    });
+        res.status(200).json({
+            status: 'success'
+        });
+    }
+    else {
+        return next(new appError(400, 'Already authenticated'))
+    }
 });

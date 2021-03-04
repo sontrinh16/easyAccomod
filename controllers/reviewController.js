@@ -18,7 +18,7 @@ exports.createReview = catchAsync( async(req, res, next) => {
         });
 
         notification = await notification.save();
-        let not_seen_noti = await Notification.find({seen: false});
+        let not_seen_noti = await Notification.find({adminOnly: true, seen: false});
 
         pusher.trigger(`admin-notification`, 'new-review', {
             data: {
@@ -74,24 +74,35 @@ exports.getReviews = catchAsync( async(req, res, next) => {
 });
 
 exports.authenticateReview = catchAsync( async(req, res, next) => {
-    let review = await Review.findOneAndUpdate({_id : req.params.id}, {authenticate: true}, {new: true});
-    let notification = new Notification({
-        ID: review._id,
-        type: 'review',
-        belongTo: review.author
-    });
-    notification = await notification.save();
-    let not_seen_noti = await Notification.find({belongTo: review.author, seen: false});
+    let review = await Review.findOne({_id : req.params.id}).populate('author');
+    //console.log(review.author)
+    if (review.authenticate !== true){
+        await Review.updateOne({_id : req.params.id}, {authenticate: true});
+        let notification = new Notification({
+            ID: review._id,
+            type: 'review',
+            belongTo: review.author._id
+        });
+        notification = await notification.save();
+        let not_seen_noti = await Notification.find({belongTo: review.author, seen: false});
 
-    pusher.trigger(`user-${review.author}`, 'review-authenticated', {
-        data: {
-            review,
-            notification,
-            not_seen_noti: not_seen_noti.length
-        }
-    });
+        const channel =  `user-${review.author._id}`;
 
-    res.status(200).json({
-        status: 'success',
-    });
+        console.log(channel)
+
+        pusher.trigger(channel, 'review-authenticated', {
+            data: {
+                review,
+                notification,
+                not_seen_noti: not_seen_noti.length
+            }
+        });
+
+        res.status(200).json({
+            status: 'success',
+        });
+    }
+    else{
+        return next(new appError(400, 'Already authenticated'))
+    }
 });
