@@ -269,7 +269,7 @@ exports.searchPost = catchAsync(async (req, res, next) => {
 exports.editPost = catchAsync(async (req, res, next) => {
     let post = await Post.findOne({_id: req.params.id});
     if(post){
-    if ( post.authenticate === true){
+    if ( post.authenticate === false){
         post = await Post.findOneAndUpdate({ _id: req.params.id }, req.body, {
             new: true
         });

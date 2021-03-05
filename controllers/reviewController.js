@@ -88,7 +88,7 @@ exports.authenticateReview = catchAsync( async(req, res, next) => {
 
         const channel =  `user-${review.author._id}`;
 
-        console.log(channel)
+        //console.log(channel)
 
         pusher.trigger(channel, 'review-authenticated', {
             data: {
