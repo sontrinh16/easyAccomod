@@ -290,14 +290,21 @@ exports.addFavorite = catchAsync(async (req, res, next) => {
     let post = await Post.findOne({ _id: req.params.id });
     let user = req.user;
     if (post){
-        user.favoriteRoom.push(post._id);
-        user = await user.save();
-        post = await Post.findOneAndUpdate({_id: post._id}, {saved: post.saved + 1},{
-            new: true
-        });
-    res.status(200).json({
-        status: 'success'
-    });
+        if (user.favoriteRoom.filter(e => e === post._id).length == 0){
+            user.favoriteRoom.push(post._id);
+            user = await user.save();
+            post = await Post.findOneAndUpdate({_id: post._id}, {saved: post.saved + 1},{
+                new: true
+            });
+            res.status(200).json({
+                status: 'success'
+            });
+        }
+        else {
+            res.status(200).json({
+                status: 'success'
+            });
+        }
     }
     else {
         return next(new appError(404, 'Post not found'))
